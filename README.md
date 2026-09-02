@@ -1,4 +1,3 @@
-Luxtory BD — 50-work starter library.
-Author photo: supplied by MD. EMON MOLLA.
-Facebook and Instagram links are included in the author profile.
-The 50 library entries point to legally identified open/public-domain sources; verify local rights before redistribution.
+Luxtory BD V4: single-file frontend + Supabase cloud submission/library backend.
+Use supabase_setup.sql once, create an admin Auth user, insert its UUID into public.admins, then paste Project URL + publishable key into the site's Owner Tools.
+Never put a Supabase service_role key in index.html. RLS is required.
