@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Luxtory BD — বাংলা ডিজিটাল সাহিত্য, গল্প, কবিতা ও পাঠের একটি আধুনিক প্ল্যাটফর্ম।">
+  <title>Luxtory BD — বাংলা ডিজিটাল সাহিত্য</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html"><span>Luxtory</span> <b>BD</b></a>
+      <button class="menu-btn" id="menuBtn" aria-label="মেনু">☰</button>
+      <nav id="mainNav">
+        <a href="#library">Library</a><a href="#categories">Categories</a><a href="#authors">Authors</a>
+        <a href="#storytellers">গল্পকারের গল্পগুলি</a><a href="#publish">Publish</a><a href="#about">About Emon</a>
+      </nav>
+      <button class="theme-btn" id="themeBtn" aria-label="ডার্ক মোড">◐</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-glow"></div>
+      <div class="container hero-inner">
+        <p class="eyebrow">বাংলা Digital Literature Platform</p>
+        <h1>Luxtory BD-তে<br><em>স্বাগতম</em></h1>
+        <p class="hero-copy">গল্প, উপন্যাস, কবিতা ও নতুন লেখকদের কণ্ঠ—একটি সুন্দর, আধুনিক ও পাঠকবান্ধব ডিজিটাল সাহিত্যভুবন।</p>
+        <div class="search-box">
+          <span>⌕</span>
+          <input id="searchInput" type="search" placeholder="বই, গল্প, কবিতা বা লেখকের নাম লিখুন…" autocomplete="off">
+          <button id="searchBtn">খুঁজুন</button>
+        </div>
+        <div class="hero-actions"><a class="btn primary" href="#library">লাইব্রেরি দেখুন</a><a class="btn ghost" href="#storytellers">নতুন লেখকদের গল্প</a></div>
+      </div>
+    </section>
+
+    <section class="section" id="library">
+      <div class="container">
+        <div class="section-head"><div><p class="eyebrow">DISCOVER</p><h2>লাইব্রেরি</h2></div><a href="#library" class="text-link">সব দেখুন →</a></div>
+        <div class="filter-row" id="categories">
+          <button class="filter active" data-cat="সব">সব</button>
+          <button class="filter" data-cat="উপন্যাস">উপন্যাস</button><button class="filter" data-cat="ছোটগল্প">ছোটগল্প</button>
+          <button class="filter" data-cat="কবিতা">কবিতা</button><button class="filter" data-cat="প্রবন্ধ">প্রবন্ধ</button>
+          <button class="filter" data-cat="শিশু সাহিত্য">শিশু সাহিত্য</button>
+        </div>
+        <div class="book-grid" id="bookGrid"></div>
+      </div>
+    </section>
+
+    <section class="section alt" id="storytellers">
+      <div class="container">
+        <div class="section-head"><div><p class="eyebrow">NEW VOICES</p><h2>গল্পকারের গল্পগুলি</h2><p class="section-desc">নতুন লেখকদের কণ্ঠ, নতুন গল্পের পৃথিবী।</p></div></div>
+        <div class="feature-panel">
+          <div><span class="badge">FEATURED</span><h3>নিজের গল্প বলুন</h3><p>আপনি লিখছেন? Luxtory BD-তে আপনার গল্প, কবিতা বা উপন্যাস প্রকাশের জন্য লেখা জমা দিন। প্রতিটি submission প্রকাশের আগে moderation-এর মধ্য দিয়ে যাবে।</p><a class="btn primary" href="#publish">লেখা জমা দিন</a></div>
+          <div class="quote-mark">“</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="authors">
+      <div class="container">
+        <div class="section-head"><div><p class="eyebrow">WRITERS</p><h2>Featured Authors</h2></div></div>
+        <div class="author-grid">
+          <article class="author-card"><div class="avatar">EM</div><div><h3>MD. EMON MOLLA</h3><p>Founder · Author</p><a href="#about">Profile দেখুন →</a></div></article>
+          <article class="author-card"><div class="avatar">আর</div><div><h3>রাফি রহমান</h3><p>গল্প · ছোটগল্প</p><a href="#library">Works দেখুন →</a></div></article>
+          <article class="author-card"><div class="avatar">সা</div><div><h3>সায়মা নূর</h3><p>কবিতা · প্রবন্ধ</p><a href="#library">Works দেখুন →</a></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="publish">
+      <div class="container narrow">
+        <p class="eyebrow">PUBLISH YOUR WRITING</p><h2>আপনার লেখা, আপনার অধিকার</h2>
+        <p class="section-desc">MVP-তে এটি একটি submission interface। Backend যুক্ত হলে Login → Submission → Moderation → Publish workflow চালু হবে।</p>
+        <form class="publish-form" id="publishForm">
+          <label>লেখার শিরোনাম<input required name="title" placeholder="যেমন: শেষ বিকেলের গল্প"></label>
+          <div class="two-col"><label>লেখকের নাম<input required name="author" placeholder="আপনার নাম"></label><label>Category<select name="category"><option>উপন্যাস</option><option>ছোটগল্প</option><option>গল্প</option><option>কবিতা</option><option>প্রবন্ধ</option><option>নাটক</option><option>অনুবাদ</option><option>শিশু সাহিত্য</option><option>অন্যান্য</option></select></label></div>
+          <label>লেখা<textarea required name="body" rows="8" placeholder="আপনার লেখা এখানে…"></textarea></label>
+          <label class="check"><input required type="checkbox"> আমি ঘোষণা করছি যে এই লেখা প্রকাশের অধিকার আমার আছে এবং আমি এটি জমা দেওয়ার অনুমতি রাখি।</label>
+          <button class="btn primary" type="submit">Submission প্রস্তুত করুন</button>
+          <p class="form-note" id="formNote"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container about-grid">
+        <div class="about-photo">EM</div>
+        <div><p class="eyebrow">FOUNDER / AUTHOR</p><h2>MD. EMON MOLLA</h2><p class="lead">Luxtory BD-এর Founder এবং একজন লেখক হিসেবে বাংলা সাহিত্যকে একটি আধুনিক digital space-এ নিয়ে আসাই এই উদ্যোগের লক্ষ্য।</p><p>Luxtory BD এমন একটি platform হতে চায় যেখানে পাঠক সহজে ভালো লেখা খুঁজে পাবেন, আর নতুন লেখক নিজের কণ্ঠকে পাঠকের কাছে পৌঁছে দিতে পারবেন—সঠিক attribution ও copyright respect-এর সঙ্গে।</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="container footer-wrap"><div><a class="brand" href="index.html"><span>Luxtory</span> <b>BD</b></a><p>বাংলা সাহিত্যের নতুন digital ঠিকানা।</p></div><div><a href="#about">About</a><a href="#publish">Publish</a><a href="#library">Library</a></div></div><div class="container copyright">© 2026 Luxtory BD · All rights reserved.</div></footer>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
