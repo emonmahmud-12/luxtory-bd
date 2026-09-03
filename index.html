@@ -78,37 +78,13 @@ body.admin-mode .admin-login-card{margin:8vh auto 0}
 @media(max-width:560px){.admin-side nav{grid-template-columns:1fr 1fr}.admin-stat-grid{grid-template-columns:1fr 1fr}.admin-form-grid{grid-template-columns:1fr}.admin-form-grid .full{grid-column:auto}.admin-pending-item{grid-template-columns:48px 1fr}.admin-pending-actions{grid-column:1/-1;justify-content:flex-start}.admin-topbar{align-items:flex-start}.admin-topbar h2{font-size:24px}}
 
 
-/* ===== STANDALONE ADMIN MODE — FIXED ===== */
-/* #owner lives inside #top, so selectors must target the actual DOM hierarchy. */
+/* ===== STANDALONE ADMIN MODE — DESIGN PRESERVED ===== */
+/* Only the public site chrome/content is hidden. The original Admin Panel design is untouched. */
 body.admin-standalone > .site-header,
 body.admin-standalone > footer { display:none !important; }
-body.admin-standalone > #top {
-  display:block !important;
-  min-height:100vh !important;
-  margin:0 !important;
-  padding:0 !important;
-}
+body.admin-standalone > #top { display:block !important; }
 body.admin-standalone > #top > section:not(#owner) { display:none !important; }
-body.admin-standalone > #top > #owner {
-  display:block !important;
-  min-height:100vh !important;
-  width:100% !important;
-  box-sizing:border-box !important;
-  margin:0 !important;
-  padding:0 !important;
-  border:0 !important;
-}
-body.admin-standalone > #top > #owner > .container {
-  max-width:none !important;
-  width:100% !important;
-  box-sizing:border-box !important;
-  margin:0 !important;
-  padding:0 !important;
-}
-body.admin-standalone .admin-panel { background:var(--bg); min-height:100vh; }
-body.admin-standalone .admin-login-card { min-height:100vh; max-width:520px; margin:0 auto; display:flex; flex-direction:column; justify-content:center; }
-body.admin-standalone #adminDashboard { min-height:100vh; }
-body.admin-standalone .admin-shell { min-height:100vh; border-radius:0; }
+body.admin-standalone > #top > #owner { display:block !important; }
 </style>
 
 <style id="admin-visibility-fix">
