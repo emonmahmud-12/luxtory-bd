@@ -99,7 +99,23 @@ async function approveCloud(id){const {data:s,error:e1}=await sb.from('submissio
 async function rejectCloud(id){await sb.from('submissions').update({status:'rejected',reviewed_by:adminSession.user.id,reviewed_at:new Date().toISOString()}).eq('id',id);await renderPendingCloud()}
 $('addBookBtn').onclick=async()=>{const title=$('admTitle').value.trim(),author=$('admAuthor').value.trim(),text=$('admText').value.trim(),cover=$('admCover').value.trim(),url=$('admUrl').value.trim();if(!title||!author||!text){$('adminMsg').innerHTML='<div class="status">নাম, লেখক এবং সম্পূর্ণ লেখা দিন।</div>';return}let coverUrl=cover||makeCover({title});if(sb&&adminSession){const {error}=await sb.from('books').insert({title,author,category:$('admCat').value,description:'Luxtory BD-তে প্রকাশিত পূর্ণ পাঠ',content:text,source_url:url||null,cover_url:coverUrl,status:'published',created_by:adminSession.user.id});if(error){$('adminMsg').innerHTML='<div class="status">'+esc(error.message)+'</div>';return}await loadCloudBooks();$('adminMsg').innerHTML='<div class="status">✓ বই প্রকাশিত হয়েছে।</div>';}else{localBooks.unshift({title,author,cat:$('admCat').value,desc:'Luxtory BD-তে প্রকাশিত পূর্ণ পাঠ',text,cover:coverUrl,url});localStorage.setItem('luxtory-local-books',JSON.stringify(localBooks));render();$('adminMsg').innerHTML='<div class="status">✓ এই ডিভাইসে বই যোগ হয়েছে। Cloud Connect করলে সবার জন্য প্রকাশ করা যাবে।</div>';}$('admTitle').value='';$('admAuthor').value='';$('admText').value='';$('admCover').value='';$('admUrl').value='';};
 $('admFile').onchange=()=>{const f=$('admFile').files[0];if(!f)return;const r=new FileReader();r.onload=()=>$('admText').value=r.result;r.readAsText(f)};
-(function init(){const t=localStorage.getItem('luxtory-theme');if(t==='dark')document.body.classList.add('dark');const u=localStorage.getItem('luxtory-sb-url'),k=localStorage.getItem('luxtory-sb-key');if(u&&k){$('sbUrl').value=u;$('sbKey').value=k;try{sb=window.supabase.createClient(u,k);loadCloudBooks().then(loadAdmin).catch(()=>{})}catch(e){}}render();})();
+(function init(){
+const t=localStorage.getItem('luxtory-theme');
+if(t==='dark')document.body.classList.add('dark');
+const defaultSbUrl='https://fyyxxgajjweljtxvhtua.supabase.co';
+const defaultSbKey='sb_publishable_P0sHN8LbfrGF90PCWfYc6A_e94VsTDg';
+const u=localStorage.getItem('luxtory-sb-url')||defaultSbUrl;
+const k=localStorage.getItem('luxtory-sb-key')||defaultSbKey;
+$('sbUrl').value=u;
+$('sbKey').value=k;
+localStorage.setItem('luxtory-sb-url',u);
+localStorage.setItem('luxtory-sb-key',k);
+try{
+  sb=window.supabase.createClient(u,k);
+  loadCloudBooks().then(loadAdmin).catch(()=>{});
+}catch(e){}
+render();
+})();
 </script>
 
 <script>
