@@ -395,8 +395,15 @@ async function loadAdmin(){
  if(!sb){$('adminLoginView').hidden=false;$('adminDashboard').hidden=true;return}
  const {data}=await sb.auth.getSession();adminSession=data?.session||null;
  const ok=await adminIsAuthorized();
- $('adminLoginView').hidden=ok;$('adminLoginView').style.display=ok?'none':'';$('adminDashboard').hidden=!ok;$('adminDashboard').style.display=ok?'block':'none';
+ setAdminLoggedInView(ok);
  if(ok){loadAdminProfile();try{await syncBaseLibraryToDatabase()}catch(e){console.error('base library sync',e)}await refreshAdminData();} 
+}
+function setAdminLoggedInView(isLoggedIn){
+ const loginView=$('adminLoginView'),dash=$('adminDashboard');
+ if(!loginView||!dash)return;
+ loginView.hidden=!!isLoggedIn; dash.hidden=!isLoggedIn;
+ loginView.style.setProperty('display',isLoggedIn?'none':'','important');
+ dash.style.setProperty('display',isLoggedIn?'block':'none','important');
 }
 $('loginBtn').onclick=async()=>{
  $('loginMsg').className='login-status';$('loginMsg').textContent='Login হচ্ছে…';
@@ -404,9 +411,13 @@ $('loginBtn').onclick=async()=>{
  if(error){$('loginMsg').className='login-status error';$('loginMsg').textContent=error.message;return}
  const ok=await adminIsAuthorized();
  if(!ok){await sb.auth.signOut();$('loginMsg').className='login-status error';$('loginMsg').textContent='এই account-টি Luxtory BD Admin হিসেবে অনুমোদিত নয়।';return}
- $('loginMsg').className='login-status ok';$('loginMsg').textContent='Login successful ✓';$('adminPass').value='';$('adminLoginView').hidden=true;$('adminLoginView').style.display='none';$('adminDashboard').hidden=false;$('adminDashboard').style.display='block';await loadAdmin();$('adminLoginView').hidden=true;$('adminLoginView').style.display='none';$('adminDashboard').hidden=false;$('adminDashboard').style.display='block';showAdminTab('dashboard');
+ $('adminPass').value='';
+ setAdminLoggedInView(true);
+ await loadAdmin();
+ setAdminLoggedInView(true);
+ showAdminTab('dashboard');
 };
-$('adminLogout').onclick=async()=>{await sb.auth.signOut();adminSession=null;await loadAdmin();$('owner').scrollIntoView({behavior:'smooth'})};
+$('adminLogout').onclick=async()=>{await sb.auth.signOut();adminSession=null;setAdminLoggedInView(false);await loadAdmin();setAdminLoggedInView(false);$('owner').scrollIntoView({behavior:'smooth'})};
 
 async function getPending(){
  if(!sb||!adminSession)return [];
@@ -602,10 +613,21 @@ document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['c','u','s',
   function setAdminMode(){
     const isAdmin=location.hash==='#owner' || location.hash.startsWith('#owner/');
     document.body.classList.toggle('admin-standalone',isAdmin);
-    if(isAdmin){
-      window.scrollTo(0,0);
-      const owner=document.getElementById('owner');
-      if(owner) owner.scrollIntoView({block:'start'});
+    const header=document.querySelector('body > header');
+    const footer=document.querySelector('body > footer');
+    const top=document.getElementById('top');
+    const owner=document.getElementById('owner');
+    if(header) header.style.setProperty('display',isAdmin?'none':'','important');
+    if(footer) footer.style.setProperty('display',isAdmin?'none':'','important');
+    if(top){
+      top.style.setProperty('display','block','important');
+      top.querySelectorAll(':scope > section').forEach(sec=>{
+        sec.style.setProperty('display',isAdmin && sec!==owner?'none':'','important');
+      });
+    }
+    if(owner){
+      owner.style.setProperty('display',isAdmin?'block':'','important');
+      if(isAdmin) window.scrollTo(0,0);
     }
   }
   window.addEventListener('hashchange',setAdminMode);
