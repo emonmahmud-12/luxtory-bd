@@ -85,6 +85,99 @@ body.admin-standalone > footer { display:none !important; }
 body.admin-standalone > #top { display:block !important; }
 body.admin-standalone > #top > section:not(#owner) { display:none !important; }
 body.admin-standalone > #top > #owner { display:block !important; }
+/* ===== FINAL ADMIN STANDALONE LAYOUT / SPACING FIX ===== */
+body.admin-standalone {
+  overflow-x:hidden;
+}
+body.admin-standalone #owner {
+  display:block !important;
+  min-height:100vh;
+  box-sizing:border-box;
+  padding:28px 0 56px !important;
+  margin:0 !important;
+}
+body.admin-standalone #owner > .container {
+  width:min(calc(100% - 36px), 1200px) !important;
+  max-width:1200px !important;
+  margin:0 auto !important;
+  box-sizing:border-box;
+}
+body.admin-standalone .admin-shell {
+  width:100%;
+  max-width:1200px;
+  margin:0 auto;
+  box-sizing:border-box;
+}
+body.admin-standalone .admin-main {
+  min-width:0;
+  box-sizing:border-box;
+}
+body.admin-standalone .admin-topbar {
+  padding:0;
+}
+body.admin-standalone .admin-topbar > div:first-child {
+  min-width:0;
+}
+body.admin-standalone .admin-topbar h2 {
+  overflow-wrap:anywhere;
+}
+@media (max-width:900px) {
+  body.admin-standalone #owner { padding:20px 0 40px !important; }
+  body.admin-standalone #owner > .container {
+    width:min(calc(100% - 28px), 760px) !important;
+  }
+  body.admin-standalone .admin-shell {
+    gap:18px;
+  }
+  body.admin-standalone .admin-side {
+    width:100%;
+    box-sizing:border-box;
+    border-radius:22px;
+    padding:18px;
+  }
+  body.admin-standalone .admin-main {
+    width:100%;
+  }
+  body.admin-standalone .admin-topbar {
+    margin-bottom:18px;
+  }
+}
+@media (max-width:560px) {
+  body.admin-standalone #owner > .container {
+    width:calc(100% - 24px) !important;
+  }
+  body.admin-standalone .admin-side {
+    padding:16px;
+    border-radius:20px;
+  }
+  body.admin-standalone .admin-side .admin-brand {
+    padding:6px 8px 16px;
+  }
+  body.admin-standalone .admin-user-mini {
+    padding:13px 8px;
+  }
+  body.admin-standalone .admin-side nav {
+    gap:6px;
+  }
+  body.admin-standalone .admin-side nav button {
+    padding:11px 12px;
+    min-width:0;
+  }
+  body.admin-standalone .admin-topbar {
+    align-items:flex-start;
+    gap:12px;
+  }
+  body.admin-standalone .admin-topbar h2 {
+    font-size:24px;
+    line-height:1.25;
+  }
+  body.admin-standalone .admin-top-actions {
+    flex:0 0 auto;
+  }
+  body.admin-standalone .admin-icon-btn {
+    white-space:nowrap;
+  }
+}
 </style>
 
 <style id="admin-visibility-fix">
