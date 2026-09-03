@@ -77,6 +77,15 @@ body.admin-mode .admin-login-card{margin:8vh auto 0}
 @media(max-width:900px){.admin-shell{grid-template-columns:1fr}.admin-side{position:static;min-height:auto}.admin-side nav{grid-template-columns:repeat(2,1fr)}.admin-stat-grid{grid-template-columns:1fr 1fr}.admin-grid-2{grid-template-columns:1fr}}
 @media(max-width:560px){.admin-side nav{grid-template-columns:1fr 1fr}.admin-stat-grid{grid-template-columns:1fr 1fr}.admin-form-grid{grid-template-columns:1fr}.admin-form-grid .full{grid-column:auto}.admin-pending-item{grid-template-columns:48px 1fr}.admin-pending-actions{grid-column:1/-1;justify-content:flex-start}.admin-topbar{align-items:flex-start}.admin-topbar h2{font-size:24px}}
 
+
+/* ===== STANDALONE ADMIN MODE ===== */
+body.admin-standalone > * { display:none !important; }
+body.admin-standalone > #owner { display:block !important; min-height:100vh; padding:0 !important; margin:0 !important; }
+body.admin-standalone > #owner > .container { max-width:none; width:100%; padding:0 !important; margin:0 !important; }
+body.admin-standalone .admin-panel { background:var(--bg); min-height:100vh; }
+body.admin-standalone .admin-login-card { min-height:100vh; max-width:520px; margin:0 auto; display:flex; flex-direction:column; justify-content:center; }
+body.admin-standalone #adminDashboard { min-height:100vh; }
+body.admin-standalone .admin-shell { min-height:100vh; border-radius:0; }
 </style>
 </head>
 <body>
@@ -559,4 +568,20 @@ document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['c','u','s',
 })();
 </script>
 
-</body></html>
+<script>
+// ===== STANDALONE ADMIN MODE =====
+(function(){
+  function setAdminMode(){
+    const isAdmin=location.hash==='#owner' || location.hash.startsWith('#owner/');
+    document.body.classList.toggle('admin-standalone',isAdmin);
+    if(isAdmin){
+      window.scrollTo(0,0);
+      const owner=document.getElementById('owner');
+      if(owner) owner.scrollIntoView({block:'start'});
+    }
+  }
+  window.addEventListener('hashchange',setAdminMode);
+  window.addEventListener('load',setAdminMode);
+  setAdminMode();
+})();
+</script></body></html>
