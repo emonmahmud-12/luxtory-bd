@@ -203,22 +203,220 @@ body.admin-standalone .admin-topbar h2 {
 <style id="admin-visibility-fix">
 #adminLoginView[hidden], #adminDashboard[hidden] { display:none !important; }
 body.admin-standalone #adminLoginView[hidden], body.admin-standalone #adminDashboard[hidden] { display:none !important; }
+
+/* ===== CATEGORY VISUAL PREVIEW — based on existing Luxtory BD design ===== */
+.luxtory-category-panel{margin-top:8px}
+.luxtory-category-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.luxtory-cat{min-width:0;min-height:76px;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:14px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;font-weight:800;line-height:1.2;transition:.2s;box-shadow:0 5px 18px rgba(28,22,18,.045)}
+.luxtory-cat:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.luxtory-cat.active{background:var(--text);border-color:var(--text);color:var(--bg)}
+.luxtory-cat .cat-icon{font-size:19px;line-height:1}
+.luxtory-cat span:last-child{font-size:13px;word-break:break-word}
+/* The screenshot indicates a tighter hero rhythm: search moves upward and the next action follows closely. */
+.hero-inner{padding-top:46px;padding-bottom:46px}
+.hero-copy{margin-top:16px;margin-bottom:18px}
+.search-box{margin-top:-10px}
+.hero-actions{margin-top:8px}
+#library.section{padding-top:54px}
+#library .section-head{margin-bottom:20px}
+#library .section-desc{margin-top:8px}
+@media(max-width:900px){
+  .hero{min-height:0}
+  .hero-inner{padding-top:38px;padding-bottom:34px}
+  .hero h1{font-size:clamp(43px,12vw,68px);letter-spacing:-2.5px}
+  .hero-copy{font-size:15px;margin-top:13px;margin-bottom:14px}
+  .search-box{max-width:none}
+  .hero-actions{margin-top:10px}
+  #library.section{padding-top:42px}
+}
+@media(max-width:560px){
+  .luxtory-category-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .luxtory-cat{min-height:72px;padding:8px 4px;border-radius:11px}
+  .luxtory-cat .cat-icon{font-size:16px}
+  .luxtory-cat span:last-child{font-size:10px;line-height:1.25}
+  .hero-inner{padding-top:30px;padding-bottom:26px}
+  .hero h1{font-size:clamp(40px,13vw,60px);line-height:1.02}
+  .hero-copy{font-size:14px;line-height:1.65}
+  .search-box{padding:5px}
+  .search-box span{padding:9px 8px;font-size:19px}
+  .search-box button{padding:9px 11px}
+  #library.section{padding-top:34px}
+  #library .section-head{margin-bottom:16px}
+}
+</style>
+
+<style id="luxtory-final-action-design">
+/* ===== Luxtory BD — Hero action + Library feed refinement ===== */
+.luxtory-hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;max-width:720px}
+.luxtory-hero-action{min-width:0;display:grid;grid-template-columns:42px 1fr 28px;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--surface) 92%,transparent);box-shadow:0 8px 24px rgba(28,22,18,.06);transition:transform .2s,box-shadow .2s,border-color .2s}
+.luxtory-hero-action:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--accent) 35%,var(--line))}
+.luxtory-hero-action .action-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:var(--text);color:var(--bg);font-size:21px}
+.luxtory-hero-action .action-copy{min-width:0;display:flex;flex-direction:column;gap:1px}
+.luxtory-hero-action strong{font-size:14px;line-height:1.3}
+.luxtory-hero-action small{font-size:10px;line-height:1.45;color:var(--muted)}
+.luxtory-hero-action .action-arrow{justify-self:end;font-size:20px;color:var(--accent)}
+.hero-action-submit{background:var(--accent);border-color:var(--accent);color:#fff}
+.hero-action-submit .action-icon{background:#fff;color:var(--accent)}
+.hero-action-submit small{color:rgba(255,255,255,.78)}
+.hero-action-submit .action-arrow{color:#fff}
+.library-feed-cta-wrap{display:flex;align-items:center;margin:-4px 0 20px}
+.library-feed-cta{display:inline-flex;align-items:center;gap:11px;background:var(--text);color:var(--bg);border-radius:15px;padding:10px 14px 10px 11px;box-shadow:0 10px 26px rgba(28,22,18,.12);transition:transform .2s,box-shadow .2s}
+.library-feed-cta:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.library-feed-cta .feed-mark{width:38px;height:38px;border-radius:11px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:19px}
+.library-feed-cta span:nth-child(2){display:flex;flex-direction:column;line-height:1.1}
+.library-feed-cta small{font-size:8px;letter-spacing:1.8px;opacity:.6;margin-bottom:3px}
+.library-feed-cta strong{font-size:15px}
+.library-feed-cta .feed-arrow{font-size:19px;margin-left:8px;color:var(--accent)}
+/* Keep the requested search rhythm tight on mobile without crowding the headline. */
+@media(max-width:900px){.luxtory-hero-actions{max-width:none}.library-feed-cta-wrap{margin-top:-2px;margin-bottom:17px}}
+@media(max-width:560px){
+  .luxtory-hero-actions{grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+  .luxtory-hero-action{grid-template-columns:31px 1fr;gap:7px;padding:9px 8px;border-radius:13px}
+  .luxtory-hero-action .action-icon{width:31px;height:31px;border-radius:9px;font-size:16px}
+  .luxtory-hero-action strong{font-size:11px;line-height:1.25}
+  .luxtory-hero-action small{font-size:8px;line-height:1.35}
+  .luxtory-hero-action .action-arrow{display:none}
+  .library-feed-cta{padding:9px 11px 9px 9px;border-radius:13px}
+  .library-feed-cta .feed-mark{width:34px;height:34px;border-radius:9px}
+  .library-feed-cta strong{font-size:14px}
+  .library-feed-cta-wrap{margin-bottom:15px}
+}
+</style>
+
+<style id="luxtory-v4-final-layout">
+/* V4: the two hero actions share one bordered frame; Library Feed CTA removed. */
+.hero-actions-frame{
+  border:1px solid var(--line);
+  background:var(--surface);
+  border-radius:18px;
+  padding:8px;
+  margin-top:14px;
+  box-shadow:0 8px 28px rgba(28,22,18,.06);
+}
+.hero-actions-frame .hero-actions{margin-top:0;}
+.library-feed-cta-wrap{display:none!important;}
+#library > .container > .section-head{margin-top:0;}
+@media(max-width:560px){
+  .hero-actions-frame{padding:6px;border-radius:15px;}
+}
+</style>
+
+<style id="luxtory-v5-requested-layout">
+/* V5: exact requested refinement */
+.hero-actions-frame{border-color:var(--accent);}
+/* No empty space before DISCOVER; library starts immediately after hero actions. */
+#library.section{padding-top:0;margin-top:0;}
+/* Remove the explanatory reader line so categories sit directly under Library. */
+#library .section-head{margin-bottom:14px;}
+#library .section-head .section-desc{display:none!important;}
+#library .luxtory-category-panel{margin-top:0;}
+@media(max-width:560px){
+  #library.section{padding-top:0;}
+  #library .section-head{margin-bottom:12px;}
+}
+</style>
+
+<style id="luxtory-v6-library-layout">
+/* V6 — Library + promo composition */
+.library-top-row{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(280px,.92fr);gap:24px;align-items:end;margin-bottom:18px}
+.library-title-block .section-head{margin:0!important}
+.library-title-block .section-head h2{margin-bottom:0}
+.library-promo{position:relative;min-height:118px;border:1px solid var(--accent);border-radius:18px;background:linear-gradient(135deg,color-mix(in srgb,var(--surface) 94%,var(--accent) 6%),var(--surface));padding:18px 20px;overflow:hidden;box-shadow:0 10px 28px rgba(28,22,18,.06)}
+.library-promo:after{content:"";position:absolute;width:130px;height:130px;border-radius:50%;right:-55px;bottom:-65px;background:color-mix(in srgb,var(--accent) 13%,transparent)}
+.library-promo-kicker{font-size:9px;letter-spacing:2.5px;color:var(--accent);font-weight:900;text-transform:uppercase;margin-bottom:6px}
+.library-promo h3{font-size:21px;line-height:1.2;margin:0 0 5px;max-width:82%}
+.library-promo p{font-size:12px;line-height:1.55;color:var(--muted);margin:0;max-width:88%}
+.library-promo .promo-badge{position:absolute;right:15px;top:15px;width:38px;height:38px;border-radius:12px;background:var(--text);color:var(--bg);display:grid;place-items:center;font-size:18px}
+.luxtory-category-panel{margin-top:0}
+.luxtory-category-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.luxtory-cat{min-height:82px}
+#bookGrid{margin-top:22px}
+@media(max-width:800px){
+  .library-top-row{grid-template-columns:1fr;gap:12px;align-items:stretch;margin-bottom:14px}
+  .library-promo{min-height:96px;padding:15px 16px}
+  .library-promo h3{font-size:18px}
+  .library-promo p{font-size:11px}
+}
+@media(max-width:560px){
+  .library-top-row{gap:10px;margin-bottom:12px}
+  .library-promo{min-height:88px;border-radius:14px;padding:13px 14px}
+  .library-promo h3{font-size:16px;max-width:86%}
+  .library-promo p{font-size:10px;max-width:90%}
+  .library-promo .promo-badge{width:32px;height:32px;border-radius:9px;right:11px;top:11px;font-size:15px}
+  .luxtory-category-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .luxtory-cat{min-height:72px;padding:8px 4px}
+  #bookGrid{margin-top:16px}
+}
+</style>
+
+
+<style id="luxtory-v7-promo-size">
+/* V7 — Keep Today's Pick / Advertisement only inside the compact marked area. */
+.library-top-row{grid-template-columns:minmax(0,.42fr) minmax(0,.58fr);gap:10px;align-items:stretch;margin-bottom:16px}
+.library-promo{min-height:0;height:100%;padding:16px 18px;border-color:var(--accent);box-shadow:none}
+.library-promo h3{font-size:19px;max-width:86%;margin-bottom:4px}
+.library-promo p{font-size:11px;line-height:1.5;max-width:92%}
+@media(max-width:800px){
+  /* On phone, keep the Library title and the editable promo side-by-side exactly as in the demo. */
+  .library-top-row{grid-template-columns:minmax(0,.42fr) minmax(0,.58fr);gap:8px;align-items:stretch;margin-bottom:12px}
+  .library-title-block{min-width:0}
+  .library-promo{min-height:0;height:100%;padding:14px 13px;border-radius:14px}
+  .library-promo h3{font-size:15px;line-height:1.25;max-width:90%}
+  .library-promo p{font-size:9.5px;line-height:1.45;max-width:94%}
+  .library-promo-kicker{font-size:7px;letter-spacing:1.8px;margin-bottom:4px}
+  .library-promo .promo-badge{width:30px;height:30px;border-radius:8px;right:9px;top:9px;font-size:13px}
+}
+@media(max-width:380px){
+  .library-top-row{grid-template-columns:minmax(0,.40fr) minmax(0,.60fr);gap:7px}
+  .library-promo{padding:12px 11px}
+  .library-promo h3{font-size:14px}
+  .library-promo p{font-size:8.7px}
+}
+</style>
+
+
+<style id="category-final-preview-v10">
+/* V10: category-first preview — book arrangement intentionally postponed. */
+#bookGrid, #bookGrid + * { display: none !important; }
 </style>
 </head>
 <body>
 <header class="site-header"><div class="container nav-wrap"><a class="brand" href="#top"><span>Luxtory</span> <b>BD</b></a><nav id="mainNav"><a href="#library">Library</a><a href="#categories">Categories</a><a href="#authors">Authors</a><a href="#storytellers">গল্পকারের গল্পগুলি</a><a href="#publish">Publish</a><a href="#about">About Emon</a><a href="#owner" class="admin-nav">⚙ Admin Panel</a></nav><button class="menu-btn" id="menuBtn" aria-label="মেনু">☰</button><button class="theme-btn" id="themeBtn" aria-label="ডার্ক মোড">◐</button></div></header>
 <main id="top">
-<section class="hero"><div class="hero-glow"></div><div class="container hero-inner"><p class="eyebrow">বাংলা Digital Literature Platform</p><h1>Luxtory BD-তে<br><em>স্বাগতম</em></h1><p class="hero-copy">গল্প, উপন্যাস, কবিতা ও নতুন লেখকদের কণ্ঠ—একটি সুন্দর, আধুনিক ও পাঠকবান্ধব ডিজিটাল সাহিত্যভুবন।</p><div class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="বই, গল্প, কবিতা বা লেখকের নাম লিখুন…"><button id="searchBtn">খুঁজুন</button></div><div class="hero-actions"><a class="btn primary" href="#library">লাইব্রেরি দেখুন</a><a class="btn ghost" href="#publish">নিজের লেখা জমা দিন</a></div></div></section>
-<section class="section" id="library"><div class="container"><div class="section-head"><div><p class="eyebrow">DISCOVER</p><h2>লাইব্রেরি</h2><p class="section-desc">কভারসহ বই দেখুন এবং <b>Luxtory BD Reader</b>-এর ভেতরেই পড়ুন।</p></div><span id="bookCount" class="meta"></span></div><div class="filter-row" id="categories">
-<button class="filter active" data-cat="সব">সব বই</button>
-<button class="filter" data-cat="উপন্যাস">📚 উপন্যাস</button>
-<button class="filter" data-cat="গল্প">📖 গল্প</button>
-<button class="filter" data-cat="ইসলামিক">🕌 ইসলামিক</button>
-<button class="filter" data-cat="কবিতা">✍️ কবিতা</button>
-<button class="filter" data-cat="নাটক ও শিশু-কিশোর">🎭 নাটক ও শিশু-কিশোর</button>
-<button class="filter" data-cat="বাংলাদেশের সাহিত্য">🇧🇩 বাংলাদেশের সাহিত্য</button>
-<button class="filter" data-cat="বাংলাদেশের বিখ্যাত সাহিত্য ও লেখকদের বইসমূহ">⭐ বিখ্যাত সাহিত্য ও লেখকদের বই</button>
-<button class="filter" data-cat="ক্যাপশন">💬 ক্যাপশন</button>
+<section class="hero"><div class="hero-glow"></div><div class="container hero-inner"><p class="eyebrow">বাংলা Digital Literature Platform</p><h1>Luxtory BD-তে<br><em>স্বাগতম</em></h1><p class="hero-copy">গল্প, উপন্যাস, কবিতা ও নতুন লেখকদের কণ্ঠ—একটি সুন্দর, আধুনিক ও পাঠকবান্ধব ডিজিটাল সাহিত্যভুবন।</p><div class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="বই, গল্প, কবিতা বা লেখকের নাম লিখুন…"><button id="searchBtn">খুঁজুন</button></div><div class="hero-actions-frame"><div class="hero-actions luxtory-hero-actions">
+  <a class="luxtory-hero-action hero-action-story" href="#storytellers">
+    <span class="action-icon">✦</span>
+    <span class="action-copy"><strong>আজকের গল্প</strong><small>নতুন ও বাছাই করা গল্প আবিষ্কার করুন</small></span>
+    <span class="action-arrow">↗</span>
+  </a>
+  <a class="luxtory-hero-action hero-action-submit" href="#publish">
+    <span class="action-icon">✎</span>
+    <span class="action-copy"><strong>আপনার লেখা জমা দিন</strong><small>আপনার গল্প, কবিতা বা লেখা পাঠান</small></span>
+    <span class="action-arrow">↗</span>
+  </a>
+</div></div></div></section>
+<section class="section" id="library"><div class="container">
+<div class="library-top-row">
+  <div class="library-title-block"><div class="section-head"><div><p class="eyebrow">DISCOVER</p><h2>লাইব্রেরি</h2></div><span id="bookCount" class="meta"></span></div></div>
+  <aside class="library-promo" aria-label="Advertisement or suggested book">
+    <span class="promo-badge">★</span>
+    <div class="library-promo-kicker">LUxtory PICK</div>
+    <h3>আজকের বাছাই / বিজ্ঞাপন</h3>
+    <p>এখানে তুমি যখন ইচ্ছা নিজের পছন্দের বিজ্ঞাপন, নতুন বই বা Suggested Book তুলে ধরতে পারবে।</p>
+  </aside>
+</div>
+<div class="luxtory-category-panel" id="categories">
+  <div class="luxtory-category-grid">
+    <button class="filter luxtory-cat active" data-cat="সব"><span class="cat-icon">⌂</span><span>সব বই</span></button>
+    <button class="filter luxtory-cat" data-cat="উপন্যাস"><span class="cat-icon">📚</span><span>উপন্যাস</span></button>
+    <button class="filter luxtory-cat" data-cat="গল্প"><span class="cat-icon">📖</span><span>গল্প</span></button>
+    <button class="filter luxtory-cat" data-cat="ইসলামিক"><span class="cat-icon">☾</span><span>ইসলামিক</span></button>
+    <button class="filter luxtory-cat" data-cat="কবিতা"><span class="cat-icon">✍</span><span>কবিতা</span></button>
+    <button class="filter luxtory-cat" data-cat="নাটক ও শিশু-কিশোর"><span class="cat-icon">🎭</span><span>নাটক ও<br>শিশু-কিশোর</span></button>
+    <button class="filter luxtory-cat" data-cat="বাংলাদেশের সাহিত্য"><span class="cat-icon">🇧🇩</span><span>বাংলাদেশের<br>সাহিত্য</span></button>
+    <button class="filter luxtory-cat" data-cat="বাংলাদেশের বিখ্যাত সাহিত্য ও লেখকদের বইসমূহ"><span class="cat-icon">★</span><span>বিখ্যাত সাহিত্য<br>ও লেখক</span></button>
+    <button class="filter luxtory-cat" data-cat="ক্যাপশন"><span class="cat-icon">💬</span><span>ক্যাপশন</span></button>
+  </div>
 </div><div class="book-grid" id="bookGrid"></div></div></section>
 <section class="section" id="bangladesh-authors">
 <div class="container">
