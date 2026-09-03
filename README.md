@@ -1,7 +1,18 @@
-Luxtory BD — Real Admin Panel V2
+# Luxtory BD — Real Admin V4
 
-1. Run admin_auth_fix.sql once in Supabase SQL Editor.
-2. Replace the live repository index.html with this index.html.
-3. Do not upload the SQL file to the website root; it is only for Supabase.
+This package fixes the V3 Admin Panel database/functionality issues.
 
-Features: login-first admin panel, pending book approval/rejection, books, authors, analytics, profile settings, responsive mobile layout, and auto-closing mobile navigation.
+## Supabase
+Run `admin_v4_migration.sql` once in Supabase SQL Editor.
+
+The migration adds:
+- real admin profile storage
+- real image uploads through Supabase Storage bucket `luxtory-media`
+- analytics duration fields and indexes
+- secure admin profile RLS policies
+
+## Admin login
+Use the existing Supabase Auth Administrator account. Never put a secret/service_role key in this website.
+
+## Important
+Upload the included `index.html` and `CNAME` to the same GitHub Pages repository used for Luxtory BD. Do not unpublish the site.
