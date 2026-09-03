@@ -110,6 +110,11 @@ body.admin-standalone .admin-login-card { min-height:100vh; max-width:520px; mar
 body.admin-standalone #adminDashboard { min-height:100vh; }
 body.admin-standalone .admin-shell { min-height:100vh; border-radius:0; }
 </style>
+
+<style id="admin-visibility-fix">
+#adminLoginView[hidden], #adminDashboard[hidden] { display:none !important; }
+body.admin-standalone #adminLoginView[hidden], body.admin-standalone #adminDashboard[hidden] { display:none !important; }
+</style>
 </head>
 <body>
 <header class="site-header"><div class="container nav-wrap"><a class="brand" href="#top"><span>Luxtory</span> <b>BD</b></a><nav id="mainNav"><a href="#library">Library</a><a href="#categories">Categories</a><a href="#authors">Authors</a><a href="#storytellers">গল্পকারের গল্পগুলি</a><a href="#publish">Publish</a><a href="#about">About Emon</a><a href="#owner" class="admin-nav">⚙ Admin Panel</a></nav><button class="menu-btn" id="menuBtn" aria-label="মেনু">☰</button><button class="theme-btn" id="themeBtn" aria-label="ডার্ক মোড">◐</button></div></header>
@@ -390,7 +395,7 @@ async function loadAdmin(){
  if(!sb){$('adminLoginView').hidden=false;$('adminDashboard').hidden=true;return}
  const {data}=await sb.auth.getSession();adminSession=data?.session||null;
  const ok=await adminIsAuthorized();
- $('adminLoginView').hidden=ok;$('adminDashboard').hidden=!ok;
+ $('adminLoginView').hidden=ok;$('adminLoginView').style.display=ok?'none':'';$('adminDashboard').hidden=!ok;$('adminDashboard').style.display=ok?'block':'none';
  if(ok){loadAdminProfile();try{await syncBaseLibraryToDatabase()}catch(e){console.error('base library sync',e)}await refreshAdminData();} 
 }
 $('loginBtn').onclick=async()=>{
@@ -399,7 +404,7 @@ $('loginBtn').onclick=async()=>{
  if(error){$('loginMsg').className='login-status error';$('loginMsg').textContent=error.message;return}
  const ok=await adminIsAuthorized();
  if(!ok){await sb.auth.signOut();$('loginMsg').className='login-status error';$('loginMsg').textContent='এই account-টি Luxtory BD Admin হিসেবে অনুমোদিত নয়।';return}
- $('loginMsg').className='login-status ok';$('loginMsg').textContent='Login successful ✓';$('adminPass').value='';await loadAdmin();showAdminTab('dashboard');
+ $('loginMsg').className='login-status ok';$('loginMsg').textContent='Login successful ✓';$('adminPass').value='';$('adminLoginView').hidden=true;$('adminLoginView').style.display='none';$('adminDashboard').hidden=false;$('adminDashboard').style.display='block';await loadAdmin();$('adminLoginView').hidden=true;$('adminLoginView').style.display='none';$('adminDashboard').hidden=false;$('adminDashboard').style.display='block';showAdminTab('dashboard');
 };
 $('adminLogout').onclick=async()=>{await sb.auth.signOut();adminSession=null;await loadAdmin();$('owner').scrollIntoView({behavior:'smooth'})};
 
