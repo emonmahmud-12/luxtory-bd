@@ -37,9 +37,7 @@
 .admin-topbar .meta{margin-top:5px}
 .admin-top-actions{display:flex;gap:8px}
 .admin-icon-btn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;cursor:pointer}
-.admin-login-card{max-width:470px;margin:50px auto;padding:30px;background:var(--surface);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}
-.admin-login-card h2{margin:4px 0 8px}
-.admin-login-card .btn{width:100%;margin-top:8px}
+.admin-panel{display:none}.admin-panel.is-open{display:block}.admin-login-card{max-width:520px;margin:34px auto;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:28px;box-shadow:0 18px 55px rgba(0,0,0,.08);overflow:hidden}.admin-login-head{padding:28px 28px 22px;background:linear-gradient(135deg,rgba(155,36,56,.12),transparent)}.admin-login-mark{width:54px;height:54px;border-radius:17px;display:grid;place-items:center;background:#8f1f30;color:#fff;font-size:25px;margin-bottom:16px}.admin-login-card h2{margin:0 0 8px;font-size:30px}.admin-login-card .login-sub{margin:0;color:var(--muted);line-height:1.7}.admin-login-form{padding:24px 28px 28px}.admin-login-card label{display:block;font-weight:700;margin:0 0 14px}.admin-login-card input{margin-top:7px}.admin-login-card .btn{width:100%;margin-top:5px;height:50px;font-size:16px}.login-status{min-height:24px;margin-top:12px;padding:0 2px;font-size:14px;color:var(--muted)}.login-status.error{color:#a01f32}.login-status.ok{color:#287a49}
 .admin-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
 .admin-stat{padding:20px;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:0 5px 20px rgba(0,0,0,.04)}
 .admin-stat .icon{font-size:25px}.admin-stat strong{display:block;font-size:29px;margin:7px 0}.admin-stat small{color:var(--muted)}
@@ -117,13 +115,18 @@
 <section class="section admin-panel" id="owner">
 <div class="container">
   <div id="adminLoginView" class="admin-login-card">
-    <p class="eyebrow">PRIVATE AREA</p>
-    <h2>Luxtory BD Admin</h2>
-    <p class="meta">শুধু অনুমোদিত Administrator-রা এই প্যানেলে প্রবেশ করতে পারবেন।</p>
-    <label>Admin email<input id="adminEmail" type="email" autocomplete="username" placeholder="admin@example.com"></label>
-    <label>Password<input id="adminPass" type="password" autocomplete="current-password" placeholder="••••••••"></label>
-    <button class="btn primary" id="loginBtn">Admin Login</button>
-    <div id="loginMsg" class="meta" style="margin-top:10px"></div>
+    <div class="admin-login-head">
+      <div class="admin-login-mark">⚙</div>
+      <p class="eyebrow">PRIVATE ADMIN AREA</p>
+      <h2>Luxtory BD Admin</h2>
+      <p class="login-sub">আপনার Administrator account দিয়ে নিরাপদে প্রবেশ করুন। Login ছাড়া কোনো Admin data দেখানো হবে না।</p>
+    </div>
+    <div class="admin-login-form">
+      <label>Admin email<input id="adminEmail" type="email" autocomplete="username" placeholder="admin@example.com"></label>
+      <label>Password<input id="adminPass" type="password" autocomplete="current-password" placeholder="আপনার password"></label>
+      <button class="btn primary" id="loginBtn">Admin Login →</button>
+      <div id="loginMsg" class="login-status" aria-live="polite"></div>
+    </div>
   </div>
 
   <div id="adminDashboard" hidden>
@@ -264,7 +267,7 @@ async function loadSourceText(url){const page=sourcePage(url); if(!page) return 
 function openReader(b){document.querySelector('.modal')?.remove(); const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="reader-box" role="dialog" aria-modal="true"><div class="reader-top"><div class="reader-topline"><div><p class="eyebrow">LUXTORY BD READER</p><h2 class="reader-title">${esc(b.title)}</h2><div class="meta">${esc(b.author)} · ${esc(b.cat||b.category||'সাহিত্য')} · ${esc(b.rights||'অধিকার তথ্য')}</div></div><button class="close" aria-label="বন্ধ করুন">×</button></div><div class="reader-tools"><button id="fontDown">A−</button><button id="fontUp">A+</button><button id="fontReset">A</button><span id="readerStatus" class="meta"><span class="spinner"></span> পাঠ লোড হচ্ছে…</span><span class="reader-lock">🔒 Luxtory BD Reader</span></div><div id="readerProgress"><span></span></div></div><article id="readerContent" class="reader-text" oncontextmenu="return false"></article></div>`;document.body.appendChild(m); const box=m.querySelector('.reader-box'),c=m.querySelector('#readerContent');let fs=Number(localStorage.getItem('luxtory-font')||20);c.style.fontSize=fs+'px';m.querySelector('#fontDown').onclick=()=>{fs=Math.max(16,fs-1);c.style.fontSize=fs+'px';localStorage.setItem('luxtory-font',fs)};m.querySelector('#fontUp').onclick=()=>{fs=Math.min(30,fs+1);c.style.fontSize=fs+'px';localStorage.setItem('luxtory-font',fs)};m.querySelector('#fontReset').onclick=()=>{fs=20;c.style.fontSize='20px';localStorage.setItem('luxtory-font',20)};m.querySelector('.close').onclick=()=>m.remove();m.addEventListener('click',e=>{if(e.target===m)m.remove()});document.addEventListener('keydown',function onKey(e){if(e.key==='Escape'){m.remove();document.removeEventListener('keydown',onKey)}});box.addEventListener('scroll',()=>{const max=box.scrollHeight-box.clientHeight; m.querySelector('#readerProgress span').style.width=(max>0?box.scrollTop/max*100:0)+'%';});(async()=>{try{if(b.text||b.content){c.innerHTML=textToHtml(b.text||b.content);m.querySelector('#readerStatus').textContent='Luxtory BD-তে পূর্ণ পাঠ';}else{const src=await loadSourceText(b.url||b.source_url||'');if(src){c.innerHTML=src;c.querySelectorAll('a').forEach(a=>{const s=document.createElement('span');s.innerHTML=a.innerHTML;a.replaceWith(s)});m.querySelector('#readerStatus').textContent='Luxtory BD-তে পূর্ণ পাঠ';}else throw new Error('পাঠ পাওয়া যায়নি')}}catch(e){c.innerHTML='<p>এই বইয়ের পূর্ণ পাঠ এই মুহূর্তে লোড হয়নি। কিছুক্ষণ পরে আবার চেষ্টা করুন।</p>';m.querySelector('#readerStatus').textContent='পাঠ লোড হয়নি';}})()}
 function textToHtml(t){return esc(t).split(/\n{2,}/).map(x=>'<p>'+x.replace(/\n/g,'<br>')+'</p>').join('')}
 function doSearch(){const q=$('searchInput').value.trim().toLowerCase();const list=q?allBooks().filter(b=>`${b.title} ${b.author} ${b.cat||b.category||''} ${b.desc||b.description||''}`.toLowerCase().includes(q)):allBooks();render(list);$('library').scrollIntoView()}
-$('searchBtn').onclick=doSearch;$('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});$('themeBtn').onclick=()=>{document.body.classList.toggle('dark');localStorage.setItem('luxtory-theme',document.body.classList.contains('dark')?'dark':'light')};if(localStorage.getItem('luxtory-theme')==='dark')document.body.classList.add('dark');$('menuBtn').onclick=()=>$('mainNav').classList.toggle('open');
+$('searchBtn').onclick=doSearch;$('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});$('themeBtn').onclick=()=>{document.body.classList.toggle('dark');localStorage.setItem('luxtory-theme',document.body.classList.contains('dark')?'dark':'light')};if(localStorage.getItem('luxtory-theme')==='dark')document.body.classList.add('dark');$('menuBtn').onclick=()=>$('mainNav').classList.toggle('open');document.querySelectorAll('#mainNav a').forEach(a=>a.addEventListener('click',()=>{const isAdmin=a.getAttribute('href')==='#owner';$('mainNav').classList.remove('open');document.querySelector('#owner').classList.toggle('is-open',isAdmin);}));const syncAdminSection=()=>{document.querySelector('#owner').classList.toggle('is-open',location.hash==='#owner')};window.addEventListener('hashchange',syncAdminSection);syncAdminSection();
 document.querySelectorAll('.filter').forEach(f=>f.onclick=()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));f.classList.add('active');const cat=f.dataset.cat;render(cat==='সব'?allBooks():allBooks().filter(b=>cat==='বাংলাদেশি লেখক'?b.country==='বাংলাদেশ':cat==='বাংলা ক্লাসিক'?(b.tags||[]).includes('বাংলা ক্লাসিক'):(b.cat||b.category)===cat));});
 
 function saveLocalSubmission(){const s={id:Date.now(),author:$('subAuthor').value.trim(),title:$('subTitle').value.trim(),category:$('subCat').value,content:$('subText').value.trim(),status:'pending',created_at:new Date().toISOString()};const arr=JSON.parse(localStorage.getItem('luxtory-local-submissions')||'[]');arr.unshift(s);localStorage.setItem('luxtory-local-submissions',JSON.stringify(arr));return s}
@@ -306,8 +309,8 @@ async function adminIsAuthorized(){
  const {data}=await sb.auth.getSession();
  adminSession=data?.session||null;
  if(!adminSession)return false;
- const {data:rows,error}=await sb.from('admins').select('user_id').eq('user_id',adminSession.user.id).limit(1);
- return !error && !!rows?.length;
+ const {data:allowed,error}=await sb.rpc('is_luxtory_admin');
+ return !error && allowed===true;
 }
 async function loadAdmin(){
  if(!sb){$('adminLoginView').hidden=false;$('adminDashboard').hidden=true;return}
@@ -317,12 +320,12 @@ async function loadAdmin(){
  if(ok){loadAdminProfile();refreshAdminData();} 
 }
 $('loginBtn').onclick=async()=>{
- $('loginMsg').textContent='Login হচ্ছে…';
+ $('loginMsg').className='login-status';$('loginMsg').textContent='Login হচ্ছে…';
  const {error}=await sb.auth.signInWithPassword({email:$('adminEmail').value.trim(),password:$('adminPass').value});
- if(error){$('loginMsg').textContent=error.message;return}
+ if(error){$('loginMsg').className='login-status error';$('loginMsg').textContent=error.message;return}
  const ok=await adminIsAuthorized();
- if(!ok){await sb.auth.signOut();$('loginMsg').textContent='এই account-টি Luxtory BD Admin হিসেবে অনুমোদিত নয়।';return}
- $('loginMsg').textContent='';$('adminPass').value='';await loadAdmin();showAdminTab('dashboard');
+ if(!ok){await sb.auth.signOut();$('loginMsg').className='login-status error';$('loginMsg').textContent='এই account-টি Luxtory BD Admin হিসেবে অনুমোদিত নয়।';return}
+ $('loginMsg').className='login-status ok';$('loginMsg').textContent='Login successful ✓';$('adminPass').value='';await loadAdmin();showAdminTab('dashboard');
 };
 $('adminLogout').onclick=async()=>{await sb.auth.signOut();adminSession=null;await loadAdmin();$('owner').scrollIntoView({behavior:'smooth'})};
 
