@@ -455,12 +455,12 @@ body.category-only-mode #library {
 </style>
 
 <style id="luxtory-v26-promo-carousel">
-/* V28 — Fixed reserved Advertisement slot. Nothing inside may change the slot height. */
+/* V29 — Fixed Advertisement slot. Title occupies the old kicker line; media gets the full remaining visual area. */
 .library-promo{box-sizing:border-box;height:190px;min-height:190px;max-height:190px;display:flex;flex-direction:column;overflow:hidden;}
-.library-promo .ad-promo-content{position:relative;z-index:1;min-width:0;min-height:0;display:grid;grid-template-rows:auto auto auto minmax(50px,1fr) auto;gap:0;height:100%;overflow:hidden;}
-.library-promo .ad-promo-content h3{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;}
-.library-promo .ad-promo-content p{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;}
-.library-promo #promoMedia{min-height:50px;overflow:hidden;margin-top:7px;border-radius:11px;position:relative;}
+.library-promo .ad-promo-content{position:relative;z-index:1;min-width:0;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:0;height:100%;overflow:hidden;}
+.library-promo .ad-promo-content h3{margin:0 0 4px!important;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;line-height:1.2;}
+.library-promo .ad-promo-content p{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin:0 0 5px;}
+.library-promo #promoMedia{min-height:0;height:100%;overflow:hidden;margin-top:0;border-radius:11px;position:relative;}
 .library-promo #promoMedia:empty{display:none;}
 .library-promo .ad-promo-media,.library-promo .ad-promo-video{display:block;width:100%;height:100%;max-height:none;object-fit:cover;border-radius:11px;margin:0;}
 .library-promo .promo-carousel{position:relative;width:100%;height:100%;overflow:hidden;border-radius:11px;}
@@ -469,13 +469,16 @@ body.category-only-mode #library {
 .library-promo .promo-dots{position:absolute;left:0;right:0;bottom:7px;display:flex;justify-content:center;gap:5px;z-index:3;pointer-events:none;}
 .library-promo .promo-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.12);}
 .library-promo .promo-dot.is-active{width:16px;border-radius:6px;background:#fff;}
+/* When media exists, the media should be the dominant visual area; description stays out of the way. */
+.library-promo:has(#promoMedia:not(:empty)) .ad-promo-content p{display:none;}
+.library-promo:has(#promoMedia:not(:empty)) .ad-promo-content{grid-template-rows:auto minmax(0,1fr) auto;}
 .admin-ad-preview .library-promo{height:190px;min-height:190px;max-height:190px;}
-.admin-ad-preview .ad-preview-media{height:92px;overflow:hidden;border-radius:10px;margin-top:7px;display:flex;gap:5px;}
+.admin-ad-preview .ad-preview-media{height:120px;overflow:hidden;border-radius:10px;margin-top:7px;display:flex;gap:5px;}
 .admin-ad-preview .ad-preview-media img{width:100%;height:100%;flex:0 0 100%;object-fit:cover;border-radius:10px;}
 @media(max-width:800px){
   .library-promo{height:220px;min-height:220px;max-height:220px;}
-  .library-promo #promoMedia{min-height:72px;}
   .admin-ad-preview .library-promo{height:220px;min-height:220px;max-height:220px;}
+  .admin-ad-preview .ad-preview-media{height:145px;}
 }
 @media(max-width:560px){
   .library-promo{height:220px;min-height:220px;max-height:220px;}
@@ -483,7 +486,6 @@ body.category-only-mode #library {
 }
 @media(max-width:380px){
   .library-promo{height:210px;min-height:210px;max-height:210px;}
-  .library-promo #promoMedia{min-height:64px;}
   .admin-ad-preview .library-promo{height:210px;min-height:210px;max-height:210px;}
 }
 </style>
@@ -509,7 +511,6 @@ body.category-only-mode #library {
   <aside class="library-promo" id="libraryPromo" aria-label="Advertisement or suggested book">
     <span class="promo-badge">★</span>
     <div class="ad-promo-content">
-      <div class="library-promo-kicker" id="promoKicker">LUxtory PICK</div>
       <h3 id="promoTitle">আজকের বাছাই / বিজ্ঞাপন</h3>
       <p id="promoText">এখানে তোমার পছন্দের বিজ্ঞাপন, নতুন বই বা Suggested Book দেখানো হবে।</p>
       <div id="promoMedia"></div>
@@ -1161,7 +1162,7 @@ function renderAdPreview(){
  }else if(type==='video'){
    const f=$('adVideoFile')?.files?.[0]; if(f)media=`<div class="ad-preview-media"><video src="${URL.createObjectURL(f)}" controls muted style="width:100%;height:100%;object-fit:cover;border-radius:10px"></video></div>`;
  }
- box.innerHTML=`<b>Preview</b><div class="library-promo" style="margin-top:10px"><div class="library-promo-kicker">LUxtory PICK</div><h3 style="margin:0 0 5px">${esc(title)}</h3><p>${esc(desc)}</p>${media}<div>${url?`<span class="ad-promo-link">${esc(button)}</span>`:''}</div></div>`;
+ box.innerHTML=`<b>Preview</b><div class="library-promo" style="margin-top:10px"><h3 style="margin:0 0 5px">${esc(title)}</h3><p>${esc(desc)}</p>${media}<div>${url?`<span class="ad-promo-link">${esc(button)}</span>`:''}</div></div>`;
 }
 async function loadAdvertisementManager(){
  if(!sb||!adminSession)return;
