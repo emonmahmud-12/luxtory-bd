@@ -749,6 +749,8 @@ function openReader(b){document.querySelector('.modal')?.remove(); const m=docum
 function textToHtml(t){return esc(t).split(/\n{2,}/).map(x=>'<p>'+x.replace(/\n/g,'<br>')+'</p>').join('')}
 function doSearch(){const q=$('searchInput').value.trim().toLowerCase();const list=q?allBooks().filter(b=>`${b.title} ${b.author} ${b.cat||b.category||''} ${b.desc||b.description||''}`.toLowerCase().includes(q)):allBooks();render(list);$('library').scrollIntoView()}
 $('searchBtn').onclick=doSearch;$('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});$('themeBtn').onclick=()=>{document.body.classList.toggle('dark');localStorage.setItem('luxtory-theme',document.body.classList.contains('dark')?'dark':'light')};if(localStorage.getItem('luxtory-theme')==='dark')document.body.classList.add('dark');$('menuBtn').onclick=()=>$('mainNav').classList.toggle('open');document.querySelectorAll('#mainNav a').forEach(a=>a.addEventListener('click',()=>{const isAdmin=a.getAttribute('href')==='#owner';$('mainNav').classList.remove('open');document.querySelector('#owner').classList.toggle('is-open',isAdmin);}));const syncAdminSection=()=>{const isAdmin=location.hash==='#owner';document.querySelector('#owner').classList.toggle('is-open',isAdmin);document.body.classList.toggle('admin-mode',isAdmin);document.title=isAdmin?'Luxtory BD — Admin Panel':'Luxtory BD — বাংলা Digital Literature Platform'};window.addEventListener('hashchange',syncAdminSection);syncAdminSection();
+window.addEventListener('load',()=>{if(typeof loadPublicAdvertisement==='function')loadPublicAdvertisement()});
+window.addEventListener('hashchange',()=>{if(typeof loadPublicAdvertisement==='function')loadPublicAdvertisement()});
 document.querySelectorAll('.filter').forEach(f=>f.onclick=()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));f.classList.add('active');const cat=f.dataset.cat;render(cat==='সব'?allBooks():allBooks().filter(b=>mainCategory(b)===cat));});
 // V12 demo feed buttons
 document.querySelectorAll('.luxtory-read').forEach(btn=>btn.onclick=()=>openReader({title:btn.dataset.demoTitle,author:btn.dataset.demoAuthor,cat:'Luxtory BD',rights:'পাঠ যুক্ত হলে Luxtory BD Reader-এ পড়া যাবে'}));
@@ -935,13 +937,13 @@ async function refreshAdminData(){
 }
 function renderAdminBooks(){
  if(!sb||!adminSession)return;
- sb.from('books').select('id,title,category,cover_url,views,created_at').eq('published',true).order('created_at',{ascending:false}).then(({data,error})=>{
+ sb.from('books').select('id,title,category,cover_url,views,created_at,author_id,authors(name)').eq('published',true).order('created_at',{ascending:false}).then(({data,error})=>{
    if(error){$('adminBooksList').innerHTML='<div class="admin-empty">'+esc(error.message)+'</div>';return}
    const q=($('bookAdminSearch').value||'').toLowerCase();
-   const arr=(data||[]).filter(b=>`${b.title} ${b.category||''}`.toLowerCase().includes(q));
+   const arr=(data||[]).map(b=>({...b,author:b.authors?.name||'অজানা লেখক'})).filter(b=>`${b.title} ${b.author||''} ${b.category||''}`.toLowerCase().includes(q));
    $('adminBooksList').innerHTML=arr.length?`<div class="meta" style="margin-bottom:10px">প্রতিটি বইয়ের কভার এখান থেকেই Gallery থেকে পরিবর্তন করতে পারবেন।</div><div style="overflow:auto"><table class="admin-table"><tr><th>Book</th><th>Category</th><th>Cover</th><th>Views</th><th>Action</th></tr>${arr.map(b=>{
       const cover=b.cover_url||'';
-      return `<tr><td><b>${esc(b.title)}</b></td><td>${esc(b.category||'—')}</td><td><div class="cover-manager"><div>${cover?`<img class="cover-thumb" src="${esc(cover)}" alt="${esc(b.title)} cover" loading="lazy">`:'<div class="cover-thumb cover-thumb-empty">কভার নেই</div>'}<span class="cover-status" id="coverStatus_${b.id}"></span></div><div><label class="cover-update-btn" for="coverFile_${b.id}">🖼️ কভার পরিবর্তন</label><input class="cover-upload-input" id="coverFile_${b.id}" type="file" accept="image/*" data-cover-book="${b.id}"></div></div></td><td>${Number(b.views||0)}</td><td><button class="admin-small-btn" data-unpublish="${b.id}">Unpublish</button></td></tr>`;
+      return `<tr><td><b>${esc(b.title)}</b><div style="font-size:12px;color:var(--muted);margin-top:4px">${esc(b.author||'অজানা লেখক')}</div></td><td>${esc(b.category||'—')}</td><td><div class="cover-manager"><div>${cover?`<img class="cover-thumb" src="${esc(cover)}" alt="${esc(b.title)} cover" loading="lazy">`:'<div class="cover-thumb cover-thumb-empty">কভার নেই</div>'}<span class="cover-status" id="coverStatus_${b.id}"></span></div><div><label class="cover-update-btn" for="coverFile_${b.id}">🖼️ কভার পরিবর্তন</label><input class="cover-upload-input" id="coverFile_${b.id}" type="file" accept="image/*" data-cover-book="${b.id}"></div></div></td><td>${Number(b.views||0)}</td><td><button class="admin-small-btn" data-unpublish="${b.id}">Unpublish</button></td></tr>`;
    }).join('')}</table></div>`:'<div class="admin-empty">কোনো বই নেই।</div>';
    document.querySelectorAll('[data-unpublish]').forEach(x=>x.onclick=async()=>{if(confirm('এই বই Unpublish করবেন?')){await sb.from('books').update({published:false}).eq('id',x.dataset.unpublish);renderAdminBooks();refreshAdminData()}});
    document.querySelectorAll('[data-cover-book]').forEach(input=>input.onchange=async()=>{
@@ -1058,12 +1060,29 @@ async function saveAdvertisement(){
 }
 function clearAdForm(){activeAdvertisement=null;['adTitle','adDescription','adUrl','adButton'].forEach(id=>$(id).value='');$('adActive').checked=true;$('adImageFile').value='';$('adVideoFile').value='';$('adImageStatus').textContent='';$('adVideoStatus').textContent='';document.querySelector('input[name="adType"][value="photo"]')?.click();$('adMsg').innerHTML='';}
 async function loadPublicAdvertisement(){
- if(!sb){return}
- const {data,error}=await sb.from('site_promotions').select('*').eq('active',true).order('updated_at',{ascending:false}).limit(1);
- const r=!error&&data?.[0]; const title=$('promoTitle'),text=$('promoText'),media=$('promoMedia'),link=$('promoLink'); if(!title||!text||!media||!link)return;
- if(!r){title.textContent='আজকের বাছাই / বিজ্ঞাপন';text.textContent='এখানে তোমার পছন্দের বিজ্ঞাপন, নতুন বই বা Suggested Book দেখানো হবে।';media.innerHTML='';link.hidden=true;return}
- title.textContent=r.title||'আজকের বাছাই / বিজ্ঞাপন';text.textContent=r.description||'';media.innerHTML='';link.hidden=!r.link_url;if(r.link_url){link.href=r.link_url;link.textContent=r.button_text||'এখনই দেখুন →'}
- if(r.media_url){if(r.type==='video'){const v=document.createElement('video');v.className='ad-promo-video';v.src=r.media_url;v.controls=true;v.playsInline=true;v.preload='metadata';media.appendChild(v)}else{const img=document.createElement('img');img.className='ad-promo-media';img.src=r.media_url;img.alt=r.title||'Advertisement';media.appendChild(img)}}
+ const title=$('promoTitle'),text=$('promoText'),media=$('promoMedia'),link=$('promoLink');
+ if(!title||!text||!media||!link)return;
+ const reset=()=>{title.textContent='আজকের বাছাই / বিজ্ঞাপন';text.textContent='এখানে তোমার পছন্দের বিজ্ঞাপন, নতুন বই বা Suggested Book দেখানো হবে।';media.innerHTML='';link.hidden=true;link.removeAttribute('href')};
+ if(!sb){reset();return}
+ try{
+  const {data,error}=await sb.from('site_promotions').select('id,type,title,description,media_url,link_url,button_text,active,updated_at').eq('active',true).order('updated_at',{ascending:false}).limit(1);
+  if(error)throw error;
+  const r=data?.[0];
+  if(!r){reset();return}
+  title.textContent=r.title||'আজকের বাছাই / বিজ্ঞাপন';
+  text.textContent=r.description||'';
+  media.innerHTML='';
+  link.hidden=!r.link_url;
+  link.removeAttribute('href');
+  if(r.link_url){link.href=r.link_url;link.textContent=r.button_text||'এখনই দেখুন →'}
+  if(r.media_url){
+   if(r.type==='video'){
+    const v=document.createElement('video');v.className='ad-promo-video';v.src=r.media_url;v.controls=true;v.playsInline=true;v.preload='metadata';media.appendChild(v);
+   }else{
+    const img=document.createElement('img');img.className='ad-promo-media';img.src=r.media_url;img.alt=r.title||'Advertisement';img.loading='lazy';media.appendChild(img);
+   }
+  }
+ }catch(e){console.error('loadPublicAdvertisement',e);reset()}
 }
 ['adTitle','adDescription','adUrl','adButton'].forEach(id=>{document.getElementById(id)?.addEventListener('input',renderAdPreview)});
 document.querySelectorAll('input[name="adType"]').forEach(x=>x.addEventListener('change',toggleAdTypeFields));
@@ -1123,7 +1142,7 @@ const defaultSbUrl='https://fyyxxgajjweljtxvhtua.supabase.co';
 const defaultSbKey='sb_publishable_P0sHN8LbfrGF90PCWfYc6A_e94VsTDg';
 const u=localStorage.getItem('luxtory-sb-url')||defaultSbUrl,k=localStorage.getItem('luxtory-sb-key')||defaultSbKey;
 localStorage.setItem('luxtory-sb-url',u);localStorage.setItem('luxtory-sb-key',k);
-try{sb=window.supabase.createClient(u,k);loadCloudBooks().then(loadAdmin).catch(()=>{loadAdmin()})}catch(e){console.error(e)}
+try{sb=window.supabase.createClient(u,k);loadPublicAdvertisement();loadCloudBooks().then(loadAdmin).catch(()=>{loadAdmin()})}catch(e){console.error(e)}
 render();
 })();;
 </script>
