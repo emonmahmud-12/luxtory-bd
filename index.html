@@ -420,6 +420,22 @@ body.admin-standalone #adminLoginView[hidden], body.admin-standalone #adminDashb
 .ad-promo-content{position:relative;z-index:1}.ad-promo-media{display:block;width:100%;max-height:150px;object-fit:cover;border-radius:11px;margin:8px 0}.ad-promo-video{display:block;width:100%;max-height:150px;border-radius:11px;background:#000;margin:8px 0}.ad-promo-link{display:inline-flex;align-items:center;gap:6px;margin-top:7px;padding:7px 11px;border-radius:9px;background:var(--accent);color:#fff;font-size:11px;font-weight:800}.ad-promo-empty{color:var(--muted);font-size:11px}.admin-ad-preview{border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--bg);margin-top:15px}.admin-ad-preview img,.admin-ad-preview video{width:100%;max-width:420px;max-height:230px;object-fit:cover;border-radius:12px;display:block;margin-top:10px}.ad-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:15px}.ad-type-grid label{margin:0!important}.ad-type-grid input{display:none}.ad-type-grid span{display:block;text-align:center;padding:11px 7px;border:1px solid var(--line);border-radius:11px;background:var(--surface);font-size:12px;cursor:pointer}.ad-type-grid input:checked+span{background:var(--accent);border-color:var(--accent);color:#fff}.ad-manager-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px;border:1px solid var(--line);border-radius:13px;margin-top:9px}.ad-manager-thumb{width:72px;height:50px;object-fit:cover;border-radius:8px;background:#ddd}.ad-manager-info{display:flex;align-items:center;gap:10px;min-width:0}.ad-manager-info>div:last-child{min-width:0}.ad-manager-info strong,.ad-manager-info small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ad-manager-actions{display:flex;gap:6px}.ad-active{color:#287a49;font-weight:800}.ad-inactive{color:var(--muted)}
 @media(max-width:700px){.ad-type-grid{grid-template-columns:1fr 1fr}.ad-manager-row{align-items:flex-start}.ad-manager-actions{width:100%}}
 </style>
+<style id="luxtory-v24-category-only">
+/* V24 — When a main category is selected, show only that category's books.
+   Hide the editorial showcase and lower public sections so the footer follows
+   the selected category's book list. The existing design returns unchanged on সব বই. */
+body.category-only-mode #book-showcase,
+body.category-only-mode #publish,
+body.category-only-mode #about,
+body.category-only-mode #bangladesh-authors,
+body.category-only-mode #islamic-library,
+body.category-only-mode #storytellers {
+  display:none !important;
+}
+body.category-only-mode #library {
+  padding-bottom:24px;
+}
+</style>
 </head>
 <body>
 <header class="site-header"><div class="container nav-wrap"><a class="brand" href="#top"><span>Luxtory</span> <b>BD</b></a><nav id="mainNav"><a href="#library">Library</a><a href="#categories">Categories</a><a href="#authors">Authors</a><a href="#storytellers">গল্পকারের গল্পগুলি</a><a href="#publish">Publish</a><a href="#about">About Emon</a><a href="#owner" class="admin-nav">⚙ Admin Panel</a></nav><button class="menu-btn" id="menuBtn" aria-label="মেনু">☰</button><button class="theme-btn" id="themeBtn" aria-label="ডার্ক মোড">◐</button></div></header>
@@ -751,7 +767,7 @@ function doSearch(){const q=$('searchInput').value.trim().toLowerCase();const li
 $('searchBtn').onclick=doSearch;$('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});$('themeBtn').onclick=()=>{document.body.classList.toggle('dark');localStorage.setItem('luxtory-theme',document.body.classList.contains('dark')?'dark':'light')};if(localStorage.getItem('luxtory-theme')==='dark')document.body.classList.add('dark');$('menuBtn').onclick=()=>$('mainNav').classList.toggle('open');document.querySelectorAll('#mainNav a').forEach(a=>a.addEventListener('click',()=>{const isAdmin=a.getAttribute('href')==='#owner';$('mainNav').classList.remove('open');document.querySelector('#owner').classList.toggle('is-open',isAdmin);}));const syncAdminSection=()=>{const isAdmin=location.hash==='#owner';document.querySelector('#owner').classList.toggle('is-open',isAdmin);document.body.classList.toggle('admin-mode',isAdmin);document.title=isAdmin?'Luxtory BD — Admin Panel':'Luxtory BD — বাংলা Digital Literature Platform'};window.addEventListener('hashchange',syncAdminSection);syncAdminSection();
 window.addEventListener('load',()=>{if(typeof loadPublicAdvertisement==='function')loadPublicAdvertisement()});
 window.addEventListener('hashchange',()=>{if(typeof loadPublicAdvertisement==='function')loadPublicAdvertisement()});
-document.querySelectorAll('.filter').forEach(f=>f.onclick=()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));f.classList.add('active');const cat=f.dataset.cat;render(cat==='সব'?allBooks():allBooks().filter(b=>mainCategory(b)===cat));});
+document.querySelectorAll('.filter').forEach(f=>f.onclick=()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));f.classList.add('active');const cat=f.dataset.cat;const categoryOnly=cat!=='সব';document.body.classList.toggle('category-only-mode',categoryOnly);render(cat==='সব'?allBooks():allBooks().filter(b=>mainCategory(b)===cat));});
 // V12 demo feed buttons
 document.querySelectorAll('.luxtory-read').forEach(btn=>btn.onclick=()=>openReader({title:btn.dataset.demoTitle,author:btn.dataset.demoAuthor,cat:'Luxtory BD',rights:'পাঠ যুক্ত হলে Luxtory BD Reader-এ পড়া যাবে'}));
 const fillSubcategories=(mainId,subId)=>{const main=$(mainId),sub=$(subId);if(!main||!sub)return;const mainValue=main.value;sub.innerHTML='<option value="">প্রধান বিভাগের সাধারণ ধরন</option>'+(SUBCATEGORIES[mainValue]||[]).map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');};
