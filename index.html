@@ -688,7 +688,7 @@ const BASE_BOOKS=books.slice(); let cloudBooks=[]; let localBooks=JSON.parse(loc
 const $=id=>document.getElementById(id); const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 function slugify(value){return String(value||'book').trim().toLowerCase().replace(/[^a-z0-9\u0980-\u09ff]+/g,'-').replace(/^-+|-+$/g,'')||'book'}
 function allBooks(){
- const merged=BASE_BOOKS.concat(cloudBooks,localBooks),seen=new Set();
+ const merged=cloudBooks.concat(localBooks,BASE_BOOKS),seen=new Set();
  return merged.filter(b=>{const key=b.url||b.source_url||`${b.title||''}|${b.author||''}`;if(seen.has(key))return false;seen.add(key);return true});
 }
 async function loadCloudBooks(){
@@ -1142,7 +1142,7 @@ const defaultSbUrl='https://fyyxxgajjweljtxvhtua.supabase.co';
 const defaultSbKey='sb_publishable_P0sHN8LbfrGF90PCWfYc6A_e94VsTDg';
 const u=localStorage.getItem('luxtory-sb-url')||defaultSbUrl,k=localStorage.getItem('luxtory-sb-key')||defaultSbKey;
 localStorage.setItem('luxtory-sb-url',u);localStorage.setItem('luxtory-sb-key',k);
-try{sb=window.supabase.createClient(u,k);loadPublicAdvertisement();loadCloudBooks().then(loadAdmin).catch(()=>{loadAdmin()})}catch(e){console.error(e)}
+try{sb=window.supabase.createClient(u,k);loadPublicAdvertisement();loadCloudBooks().then(()=>{render();loadAdmin()}).catch(()=>{render();loadAdmin()})}catch(e){console.error(e)}
 render();
 })();;
 </script>
