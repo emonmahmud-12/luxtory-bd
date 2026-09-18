@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Luxtory Bd — Admin Dashboard v2</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f6f8;color:#111}
+button{font:inherit;cursor:pointer;border:0}.app{display:flex;min-height:100vh}
+.sidebar{width:250px;background:#111;color:#fff;padding:20px 14px;position:fixed;inset:0 auto 0 0;z-index:10}
+.brand{font-size:23px;font-weight:800;padding:10px 12px 24px}.brand small{display:block;color:#888;font-size:11px;font-weight:500;margin-top:4px}
+.nav button{width:100%;background:transparent;color:#bbb;text-align:left;padding:13px 14px;border-radius:10px;margin:2px 0;font-size:14px}.nav button.active,.nav button:hover{background:#222;color:#fff}
+.main{margin-left:250px;width:calc(100% - 250px);padding:22px 28px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.title h1{margin:0;font-size:28px}.title p{margin:5px 0 0;color:#777;font-size:13px}
+.actions{display:flex;gap:10px}.btn{padding:11px 15px;border-radius:10px;background:#fff;border:1px solid #e4e5e8}.btn.dark{background:#111;color:#fff;border-color:#111}
+.live{display:inline-flex;align-items:center;gap:7px;background:#eaf8ef;color:#16803c;padding:9px 12px;border-radius:999px;font-size:12px;font-weight:700}.dot{width:8px;height:8px;background:#19a957;border-radius:50%;box-shadow:0 0 0 4px #d5f2df}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:#fff;border:1px solid #e7e8eb;border-radius:16px;padding:19px;box-shadow:0 2px 10px rgba(0,0,0,.025)}
+.metric{min-height:142px;position:relative}.metric .icon{position:absolute;right:16px;top:16px;width:38px;height:38px;border-radius:11px;background:#f2f3f5;display:grid;place-items:center;font-size:19px}.label{color:#7a7d83;font-size:13px}.value{font-size:30px;font-weight:800;margin:12px 0 8px}.change{font-size:12px}.up{color:#159447}.muted{color:#8a8d92}
+.sectiongrid{display:grid;grid-template-columns:1.65fr 1fr;gap:14px;margin-top:14px}.sectiongrid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.card h2{font-size:17px;margin:0 0 17px}.cardhead{display:flex;justify-content:space-between;align-items:center}.link{color:#555;font-size:12px;background:none}
+.chart{height:235px;display:flex;align-items:end;gap:8px;padding:15px 5px 4px;border-bottom:1px solid #eee}.barwrap{flex:1;height:100%;display:flex;align-items:end;justify-content:center;gap:3px}.bar{width:45%;border-radius:6px 6px 0 0;background:#151515;min-height:5px}.bar.alt{background:#d7d9dd}.days{display:flex;justify-content:space-between;color:#999;font-size:10px;margin-top:8px}
+.orders{width:100%;border-collapse:collapse;font-size:12px}.orders th{text-align:left;color:#888;font-weight:600;padding:8px;border-bottom:1px solid #eee}.orders td{padding:11px 8px;border-bottom:1px solid #f0f0f0}.status{padding:5px 8px;border-radius:999px;font-size:10px;font-weight:700}.pending{background:#fff4d9;color:#9a6800}.confirmed{background:#e9f2ff;color:#2563a8}.delivered{background:#eaf8ef;color:#17803d}
+.product{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid #eee}.thumb{width:45px;height:55px;background:#eceef1;border-radius:8px;display:grid;place-items:center;font-size:11px;color:#777}.product b{font-size:12px}.product small{display:block;color:#888;margin-top:4px}.amount{margin-left:auto;font-weight:700;font-size:12px}
+.alert{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:#fafafa;margin:8px 0;border-left:3px solid #e08a00;font-size:12px}.alert.critical{border-color:#d33}.quick{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.quick button{padding:14px 10px;background:#f7f7f8;border:1px solid #e8e8ea;border-radius:11px;text-align:left;font-size:12px}.quick button b{display:block;font-size:14px;margin-bottom:3px}
+.trafficrow{display:flex;align-items:center;gap:10px;margin:12px 0;font-size:12px}.track{height:7px;background:#eee;border-radius:20px;flex:1;overflow:hidden}.fill{height:100%;background:#111;border-radius:20px}
+.footer-note{text-align:center;color:#999;font-size:10px;margin:22px}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:.2s}.sidebar.open{transform:translateX(0)}.main{margin-left:0;width:100%;padding:16px}.grid{grid-template-columns:repeat(2,1fr)}.sectiongrid,.sectiongrid2{grid-template-columns:1fr}.top{align-items:flex-start}.actions{flex-wrap:wrap;justify-content:flex-end}.mobilemenu{display:inline-grid!important}}
+.mobilemenu{display:none;width:42px;height:42px;border-radius:11px;background:#111;color:#fff;place-items:center;margin-right:10px}
+</style>
+<style>
+.field{display:flex;flex-direction:column;gap:5px;margin:9px 0}.field input,.field textarea,.field select{padding:11px;border:1px solid #ddd;border-radius:9px;font:inherit}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field.full{grid-column:1/-1}.tablewrap{overflow:auto}.adminTable{width:100%;border-collapse:collapse;font-size:12px}.adminTable th,.adminTable td{padding:10px 8px;border-bottom:1px solid #eee;text-align:left;white-space:nowrap}.pill{padding:5px 8px;border-radius:999px;background:#eee;font-size:10px}.thumbx{width:44px;height:52px;object-fit:cover;border-radius:7px;background:#eee}@media(max-width:600px){.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+</style></head>
+<body>
+<div id="login" style="position:fixed;inset:0;background:#111;display:grid;place-items:center;z-index:100">
+ <form id="loginForm" style="width:min(380px,92%);background:#fff;padding:26px;border-radius:18px">
+  <h2 style="margin:0 0 6px">Luxtory Bd</h2><p class="muted">Admin login</p>
+  <label class="field">Email<input id="email" type="email" required></label>
+  <label class="field">Password<input id="password" type="password" required></label>
+  <button class="btn dark" style="width:100%;margin-top:8px">LOGIN</button>
+  <p id="loginMsg" class="muted"></p>
+ </form>
+</div>
+<div class="app" id="app" style="display:none">
+<aside class="sidebar" id="sidebar"><div class="brand">Luxtory Bd <small>ADMIN CONTROL CENTER</small></div><div class="nav">
+<button class="active" data-view="dashboard">▦ &nbsp; Dashboard</button><button data-view="orders">◫ &nbsp; Orders</button><button data-view="products">□ &nbsp; Products</button><button data-view="inventory">▤ &nbsp; Inventory</button><button data-view="customers">♙ &nbsp; Customers</button><button data-view="analytics">⌁ &nbsp; Analytics</button><button data-view="coupons">◈ &nbsp; Coupons</button><button data-view="website">▧ &nbsp; Website</button><button data-view="settings">⚙ &nbsp; Settings</button></div></aside>
+<main class="main"><header class="top"><div style="display:flex;align-items:center"><button class="mobilemenu" id="menu">☰</button><div class="title"><h1 id="pageTitle">Dashboard</h1><p>Luxtory Bd store control center</p></div></div><div class="actions"><span class="live"><i class="dot"></i>Connected</span><button class="btn" id="refresh">↻ Refresh</button><button class="btn dark" id="add">＋ Add Product</button><button class="btn" id="logout">Logout</button></div></header><div id="view"></div></main></div>
+<div id="modal" style="display:none;position:fixed;inset:0;background:#0008;z-index:50;place-items:center;padding:15px"><div class="card" style="width:min(680px,100%);max-height:92vh;overflow:auto"><div class="cardhead"><h2 id="modalTitle">Product</h2><button class="btn" onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
+
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand">Luxtory Bd <small>ADMIN CONTROL CENTER</small></div>
+  <div class="nav">
+    <button class="active">▦ &nbsp; Dashboard</button>
+    <button>◫ &nbsp; Orders <span style="float:right">12</span></button>
+    <button>□ &nbsp; Products</button>
+    <button>▤ &nbsp; Inventory</button>
+    <button>♙ &nbsp; Customers</button>
+    <button>⌁ &nbsp; Analytics</button>
+    <button>◈ &nbsp; Coupons</button>
+    <button>▧ &nbsp; Website</button>
+    <button>⚙ &nbsp; Settings</button>
+  </div>
+</aside>
+
+<main class="main">
+<header class="top">
+  <div style="display:flex;align-items:center">
+    <button class="mobilemenu" id="menu">☰</button>
+    <div class="title"><h1>Dashboard</h1><p>আজকের ব্যবসা, ভিজিটর ও অর্ডারের সম্পূর্ণ চিত্র</p></div>
+  </div>
+  <div class="actions">
+    <span class="live"><i class="dot"></i><span id="online">24</span> visitors online</span>
+    <button class="btn">Today ▾</button><button class="btn dark">＋ Add Product</button>
+  </div>
+</header>
+
+<section class="grid">
+  <div class="card metric"><div class="icon">◉</div><span class="label">Visitors Today</span><div class="value" id="visitors">1,842</div><div class="change up">↑ 18.4% <span class="muted">vs yesterday</span></div></div>
+  <div class="card metric"><div class="icon">◌</div><span class="label">Online Now</span><div class="value" id="online2">24</div><div class="change up">Live website visitors</div></div>
+  <div class="card metric"><div class="icon">৳</div><span class="label">Today's Sales</span><div class="value">৳27,850</div><div class="change up">↑ 12.8% <span class="muted">vs yesterday</span></div></div>
+  <div class="card metric"><div class="icon">▣</div><span class="label">Today's Orders</span><div class="value">18</div><div class="change up">↑ 5 orders <span class="muted">vs yesterday</span></div></div>
+  <div class="card metric"><div class="icon">%</div><span class="label">Conversion Rate</span><div class="value">0.98%</div><div class="change muted">Visitors → orders</div></div>
+  <div class="card metric"><div class="icon">↗</div><span class="label">Page Views</span><div class="value">5,634</div><div class="change up">↑ 22.1% this week</div></div>
+  <div class="card metric"><div class="icon">▤</div><span class="label">Products</span><div class="value">48</div><div class="change muted">42 active · 6 hidden</div></div>
+  <div class="card metric"><div class="icon">♙</div><span class="label">Customers</span><div class="value">1,248</div><div class="change up">+31 this month</div></div>
+</section>
+
+<section class="sectiongrid">
+<div class="card">
+  <div class="cardhead"><h2>Sales & Visitors</h2><button class="link">Last 7 days ▾</button></div>
+  <div class="chart" id="chart"></div>
+  <div class="days"><span>Sat</span><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span></div>
+</div>
+<div class="card">
+  <div class="cardhead"><h2>Traffic Sources</h2><button class="link">Details →</button></div>
+  <div class="trafficrow"><span>Facebook</span><div class="track"><div class="fill" style="width:74%"></div></div><b>74%</b></div>
+  <div class="trafficrow"><span>Google</span><div class="track"><div class="fill" style="width:51%"></div></div><b>51%</b></div>
+  <div class="trafficrow"><span>Direct</span><div class="track"><div class="fill" style="width:39%"></div></div><b>39%</b></div>
+  <div class="trafficrow"><span>Instagram</span><div class="track"><div class="fill" style="width:26%"></div></div><b>26%</b></div>
+  <div style="margin-top:22px;padding:13px;background:#f7f7f8;border-radius:11px;font-size:12px"><b>Visitors</b><br><span class="muted">Unique visitors are tracked automatically when the real backend is connected.</span></div>
+</div>
+</section>
+
+<section class="sectiongrid2">
+<div class="card">
+ <div class="cardhead"><h2>Recent Orders</h2><button class="link">View all →</button></div>
+ <table class="orders"><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
+ <tbody><tr><td>#LB-1048</td><td>Rahim</td><td>৳2,398</td><td><span class="status confirmed">Confirmed</span></td></tr>
+ <tr><td>#LB-1047</td><td>Nusrat</td><td>৳1,899</td><td><span class="status pending">Pending</span></td></tr>
+ <tr><td>#LB-1046</td><td>Tanvir</td><td>৳3,297</td><td><span class="status delivered">Delivered</span></td></tr>
+ <tr><td>#LB-1045</td><td>Jannat</td><td>৳1,499</td><td><span class="status confirmed">Processing</span></td></tr></tbody></table>
+</div>
+<div class="card">
+ <div class="cardhead"><h2>Top Products</h2><button class="link">Products →</button></div>
+ <div class="product"><div class="thumb">PHOTO</div><div><b>Premium Oxford Shirt</b><small>32 sold · 18 left</small></div><div class="amount">৳1,899</div></div>
+ <div class="product"><div class="thumb">PHOTO</div><div><b>Classic White Shirt</b><small>27 sold · 5 left</small></div><div class="amount">৳1,499</div></div>
+ <div class="product"><div class="thumb">PHOTO</div><div><b>Oversized T-Shirt</b><small>21 sold · 24 left</small></div><div class="amount">৳899</div></div>
+</div>
+</section>
+
+<section class="sectiongrid2">
+<div class="card"><div class="cardhead"><h2>⚠ Stock Alerts</h2><button class="link">Manage inventory →</button></div>
+ <div class="alert critical"><span><b>Olive Overshirt</b><br>Only 3 left</span><b>3</b></div>
+ <div class="alert"><span><b>Classic White Shirt</b><br>Only 5 left</span><b>5</b></div>
+ <div class="alert"><span><b>Black Cargo Pant</b><br>Only 7 left</span><b>7</b></div>
+</div>
+<div class="card"><h2>Quick Actions</h2><div class="quick">
+ <button><b>＋ Add Product</b><span class="muted">New product & photos</span></button>
+ <button><b>▣ Manage Orders</b><span class="muted">Confirm & update status</span></button>
+ <button><b>▤ Update Stock</b><span class="muted">Quantity & variants</span></button>
+ <button><b>▧ Website Control</b><span class="muted">Banner, offer & sections</span></button>
+</div></div>
+</section>
+<div class="footer-note">Demo dashboard — all numbers above are sample data until connected to Supabase.</div>
+</main></div>
+
+<script>
+const bars=[42,57,48,72,61,88,76], visitors=[31,44,39,63,52,78,68];
+const chart=document.getElementById('chart');
+bars.forEach((v,i)=>{const w=document.createElement('div');w.className='barwrap';w.innerHTML=`<div class="bar alt" style="height:${visitors[i]}%"></div><div class="bar" style="height:${v}%"></div>`;chart.appendChild(w)});
+let online=24;
+setInterval(()=>{online=Math.max(8,Math.min(39,online+(Math.random()>.5?1:-1)));document.getElementById('online').textContent=online;document.getElementById('online2').textContent=online},4000);
+document.getElementById('menu').onclick=()=>document.getElementById('sidebar').classList.toggle('open');
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const sb=window.supabase.createClient('https://fyyxxgajjweljtxvhtua.supabase.co','sb_publishable_P0sHN8LbfrGF90PCWfYc6A_e94VsTDg');let products=[],orders=[],customers=[],categories=[],view='dashboard';
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const money=n=>'৳'+Number(n||0).toLocaleString('en-BD');
+async function init(){const {data:{session}}=await sb.auth.getSession();if(session){document.getElementById('login').style.display='none';document.getElementById('app').style.display='flex';await load()}}
+document.getElementById('loginForm').onsubmit=async e=>{e.preventDefault();const {error}=await sb.auth.signInWithPassword({email:email.value,password:password.value});if(error)loginMsg.textContent=error.message;else{login.style.display='none';app.style.display='flex';load()}};
+logout.onclick=async()=>{await sb.auth.signOut();location.reload()};menu.onclick=()=>sidebar.classList.toggle('open');refresh.onclick=()=>load();add.onclick=()=>productForm();
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{view=b.dataset.view;document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});
+async function load(){const [p,o,c,cat]=await Promise.all([sb.from('products').select('*,product_images(*),product_variants(*)').order('created_at',{ascending:false}),sb.from('orders').select('*').order('created_at',{ascending:false}).limit(200),sb.from('customers').select('*').order('created_at',{ascending:false}).limit(200),sb.from('categories').select('id,name').order('name')]);if(p.error)alert(p.error.message);products=p.data||[];orders=o.data||[];customers=c.data||[];categories=cat.data||[];render()}
+function render(){pageTitle.textContent=view[0].toUpperCase()+view.slice(1);if(view==='dashboard')dashboard();else if(view==='products'||view==='inventory')productView();else if(view==='orders')orderView();else if(view==='customers')customerView();else if(view==='analytics')analytics();else if(view==='coupons')couponView();else if(view==='website')websiteView();else settingsView()}
+function dashboard(){const sales=orders.filter(o=>o.order_status!=='cancelled').reduce((a,o)=>a+Number(o.total_amount||0),0),stock=products.flatMap(p=>p.product_variants||[]).reduce((a,v)=>a+Number(v.stock||0),0);viewEl(`<section class="grid"><div class="card metric"><span class="label">Products</span><div class="value">${products.length}</div></div><div class="card metric"><span class="label">Orders</span><div class="value">${orders.length}</div></div><div class="card metric"><span class="label">Customers</span><div class="value">${customers.length}</div></div><div class="card metric"><span class="label">Sales</span><div class="value">${money(sales)}</div></div></section><section class="sectiongrid"><div class="card"><h2>Recent Orders</h2>${orderTable(orders.slice(0,8))}</div><div class="card"><h2>Low Stock</h2>${products.flatMap(p=>(p.product_variants||[]).map(v=>({p,v}))).filter(x=>x.v.stock<=5).slice(0,8).map(x=>`<div class="alert"><b>${esc(x.p.name)}</b> — ${x.v.stock} left</div>`).join('')||'<p class="muted">No low-stock variants.</p>'}</div></section>`) }
+function viewEl(x){document.getElementById('view').innerHTML=x}
+function orderTable(os){return `<div class="tablewrap"><table class="adminTable"><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th></tr>${os.map(o=>`<tr><td>${esc(o.order_number)}</td><td>${esc(o.customer_name)}<br>${esc(o.customer_phone)}</td><td>${money(o.total_amount)}</td><td>${esc(o.order_status)}</td></tr>`).join('')}</table></div>`}
+function orderView(){viewEl(`<div class="card"><h2>Orders</h2><div class="tablewrap"><table class="adminTable"><tr><th>Order</th><th>Customer</th><th>Phone</th><th>Total</th><th>Status</th><th>Update</th></tr>${orders.map(o=>`<tr><td>${esc(o.order_number)}</td><td>${esc(o.customer_name)}</td><td>${esc(o.customer_phone)}</td><td>${money(o.total_amount)}</td><td>${esc(o.order_status)}</td><td><select onchange="setStatus('${o.id}',this.value)">${['pending','confirmed','processing','shipped','delivered','cancelled'].map(s=>`<option ${o.order_status===s?'selected':''}>${s}</option>`).join('')}</select></td></tr>`).join('')}</table></div></div>`) }
+async function setStatus(id,status){const {error}=await sb.from('orders').update({order_status:status,updated_at:new Date().toISOString()}).eq('id',id);if(error)alert(error.message);else load()}
+function productView(){viewEl(`<div class="card"><div class="cardhead"><h2>${view==='inventory'?'Inventory':'Products'}</h2><button class="btn dark" onclick="productForm()">＋ Add Product</button></div><div class="tablewrap"><table class="adminTable"><tr><th>Photo</th><th>Name</th><th>Price</th><th>Variants/Stock</th><th>Status</th><th>Action</th></tr>${products.map(p=>{const img=(p.product_images||[]).find(i=>i.is_primary)?.image_url||(p.product_images||[])[0]?.image_url;const stock=(p.product_variants||[]).reduce((a,v)=>a+Number(v.stock||0),0);return `<tr><td>${img?`<img class="thumbx" src="${esc(img)}">`:'—'}</td><td><b>${esc(p.name)}</b><br><small>${esc(p.sku||'')}</small></td><td>${money(p.discount_price??p.price)}</td><td>${(p.product_variants||[]).length} / ${stock}</td><td>${esc(p.status)}</td><td><button class="btn" onclick="productForm('${p.id}')">Edit</button> <button class="btn" onclick="toggleProduct('${p.id}')">${p.status==='active'?'Hide':'Activate'}</button></td></tr>`}).join('')}</table></div></div>`) }
+async function toggleProduct(id){const p=products.find(x=>x.id===id);const {error}=await sb.from('products').update({status:p.status==='active'?'hidden':'active',updated_at:new Date().toISOString()}).eq('id',id);if(error)alert(error.message);else load()}
+function productForm(id){const p=products.find(x=>x.id===id)||{name:'',price:'',discount_price:'',sku:'',description:'',category_id:'',featured:false,status:'active'};openModal(id?'Edit Product':'Add Product',`<form id="pf"><div class="formgrid"><label class="field"><span>Name *</span><input name="name" value="${esc(p.name)}" required></label><label class="field"><span>SKU</span><input name="sku" value="${esc(p.sku||'')}"></label><label class="field"><span>Price *</span><input name="price" type="number" min="0" step=".01" value="${p.price}" required></label><label class="field"><span>Discount price</span><input name="discount_price" type="number" min="0" step=".01" value="${p.discount_price??''}"></label><label class="field"><span>Category</span><select name="category_id"><option value="">—</option>${categories.map(c=>`<option value="${c.id}" ${p.category_id===c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label><label class="field"><span>Status</span><select name="status"><option ${p.status==='active'?'selected':''}>active</option><option ${p.status==='hidden'?'selected':''}>hidden</option></select></label><label class="field full"><span>Description</span><textarea name="description">${esc(p.description||'')}</textarea></label></div><div class="modalActions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn dark">Save</button></div></form>`);pf.onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target),data={name:f.get('name'),price:Number(f.get('price')),discount_price:f.get('discount_price')?Number(f.get('discount_price')):null,sku:f.get('sku')||null,description:f.get('description')||null,category_id:f.get('category_id')||null,status:f.get('status'),updated_at:new Date().toISOString()};if(!id)data.slug=f.get('name').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'-'+Date.now();const q=id?sb.from('products').update(data).eq('id',id):sb.from('products').insert([data]);const {error}=await q;if(error)alert(error.message);else{closeModal();load()}}}
+function customerView(){viewEl(`<div class="card"><h2>Customers (${customers.length})</h2>${customers.length?`<div class="tablewrap"><table class="adminTable"><tr><th>Name</th><th>Phone</th><th>Email</th><th>City</th></tr>${customers.map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.phone)}</td><td>${esc(c.email||'')}</td><td>${esc(c.city||'')}</td></tr>`).join('')}</table></div>`:'<p class="muted">No customers yet.</p>'}</div>`) }
+function analytics(){const valid=orders.filter(o=>o.order_status!=='cancelled'),sales=valid.reduce((a,o)=>a+Number(o.total_amount||0),0);viewEl(`<section class="grid"><div class="card metric"><span class="label">Gross sales</span><div class="value">${money(sales)}</div></div><div class="card metric"><span class="label">Average order</span><div class="value">${money(valid.length?sales/valid.length:0)}</div></div><div class="card metric"><span class="label">Delivered</span><div class="value">${orders.filter(o=>o.order_status==='delivered').length}</div></div><div class="card metric"><span class="label">Cancelled</span><div class="value">${orders.filter(o=>o.order_status==='cancelled').length}</div></div></section>`) }
+function couponView(){viewEl('<div class="card"><h2>Coupons</h2><p class="muted">Coupon table is connected to Supabase. Coupon CRUD can be added after the core store is live.</p></div>')}
+function websiteView(){viewEl('<div class="card"><h2>Website Control</h2><p class="muted">Manage banners and store settings directly in Supabase tables <b>store_banners</b> and <b>store_settings</b>.</p></div>')}
+function settingsView(){viewEl('<div class="card"><h2>Settings</h2><p class="muted">Authentication and database access are controlled by Supabase. Never expose a secret/service_role key.</p></div>')}
+function openModal(t,b){modalTitle.textContent=t;modalBody.innerHTML=b;modal.style.display='grid'}function closeModal(){modal.style.display='none'}
+init();
+</script></body></html>

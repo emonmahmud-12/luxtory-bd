@@ -1,0 +1,7 @@
+IMPORTANT
+1) Run SUPABASE-SETUP.sql once.
+2) Supabase Dashboard > Authentication > Users > Add user: create your admin email/password.
+3) In SQL Editor run:
+   insert into public.store_admins(user_id) values ('YOUR-AUTH-USER-UUID');
+4) Admin: admin.html
+5) Customer: index.html
