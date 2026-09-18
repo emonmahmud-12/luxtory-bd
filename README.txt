@@ -1,21 +1,9 @@
-LUxtory Bd FINAL
+Luxtory Bd — FINAL READY
 
-Files:
-- index.html: customer website
-- admin.html: Supabase Auth admin panel
-
-IMPORTANT:
-1. Create an admin user in Supabase Authentication > Users.
-2. Upload the contents of this folder to GitHub Pages (not the ZIP itself).
-3. The admin panel uses the Supabase publishable key only; never add a secret/service_role key.
-
-Admin features in this build:
-- Supabase login/logout
-- Dashboard
-- Product add/edit/delete/hide
-- Size/color/stock variants
-- 3-dot action menus
-- Orders and status update
-- Customers
-- Basic analytics
-- Mobile sidebar/menu
+Files: index.html (customer site), admin.html (admin), SUPABASE-FINAL-SETUP.sql.
+1. Run SUPABASE-FINAL-SETUP.sql in Supabase SQL Editor.
+2. Authentication > Users > create admin email/password.
+3. Copy that user UUID and run: insert into public.store_admins(user_id) values ('USER-UUID');
+4. GitHub Pages: upload the FILES inside this ZIP to the repository root (not the ZIP itself).
+5. Customer: index.html. Admin: admin.html.
+6. Never expose any secret/service_role key.
